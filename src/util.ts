@@ -150,7 +150,7 @@ export namespace Util {
 
   export function getInputs() {
     const days = parseInt(core.getInput('prs'), 10) || 7
-    const input = (name: string, defaultValue?: string) =>
+    const input = (name: string, defaultValue: string) =>
       core.getInput(name) || defaultValue
 
     return {

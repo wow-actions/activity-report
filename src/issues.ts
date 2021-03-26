@@ -148,29 +148,6 @@ export namespace Issues {
               rocket,
               '+1': plus,
             }
-
-            // const result: string[] = []
-            // if (plus > 0) {
-            //   result.push(`:+1: x${plus}`)
-            // }
-
-            // if (laugh > 0) {
-            //   result.push(`:smile: x${laugh}`)
-            // }
-
-            // if (hooray > 0) {
-            //   result.push(`:tada: x${hooray}`)
-            // }
-
-            // if (heart > 0) {
-            //   result.push(`:heart: x${heart}`)
-            // }
-
-            // if (rocket > 0) {
-            //   result.push(`:rocket: x${rocket}`)
-            // }
-
-            // return result.join(', ')
           }
 
           result.push(
@@ -330,8 +307,8 @@ export namespace Issues {
       config.templateLikedIssuesTitle,
       timespan,
       {
-        issues,
         likedIssues,
+        issues,
       },
       true,
     )
