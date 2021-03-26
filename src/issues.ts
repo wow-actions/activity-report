@@ -50,7 +50,9 @@ export namespace Issues {
   ) {
     const fromDate = timespan.toDateString
     const toDate = timespan.fromDateString
-    let result = `${renderTitle(timespan, config)}\n`
+    const result: string[] = []
+
+    result.push(renderTitle(timespan, config))
 
     const issues = issueList.filter(
       (issue) =>
@@ -58,39 +60,35 @@ export namespace Issues {
         issue.user!.login !== 'weekly-digest[bot]',
     )
 
-    result += `${renderSummary(timespan, config, issues)}\n`
+    result.push(renderSummary(timespan, config, issues))
 
     if (issues.length > 0) {
       const openIssues = issues.filter((issue) => issue.state === 'open')
       const closedIssues = issues.filter((issue) => issue.state === 'closed')
-      result += `${renderStatistics(
-        timespan,
-        config,
-        issues,
-        openIssues,
-        closedIssues,
-      )}\n`
+      result.push(
+        renderStatistics(timespan, config, issues, openIssues, closedIssues),
+      )
 
       if (openIssues.length > 0) {
-        const temp: string[] = [
+        const section: string[] = [
           renderOpenIssuesTitle(timespan, config, openIssues, issues),
         ]
 
         openIssues.forEach((issue) => {
-          temp.push(
+          section.push(
             renderOpenIssuesItem(timespan, config, issue, openIssues, issues),
           )
         })
 
-        result += temp.join('\n')
+        result.push(section.join('\n'))
       }
 
       if (closedIssues.length > 0) {
-        const temp: string[] = [
+        const section: string[] = [
           renderClosedIssuesTitle(timespan, config, closedIssues, issues),
         ]
         closedIssues.forEach((issue) => {
-          temp.push(
+          section.push(
             renderClosedIssuesItem(
               timespan,
               config,
@@ -100,7 +98,7 @@ export namespace Issues {
             ),
           )
         })
-        result += temp.join('\n')
+        result.push(section.join('\n'))
       }
 
       // For Liked issue
@@ -167,16 +165,18 @@ export namespace Issues {
           }
 
           const details = likedIssues.map((issue) => detail(issue))
-          result += [
-            renderLikedIssuesTitle(timespan, config, likedIssues, issues),
-            renderLikedIssuesDetail(
-              timespan,
-              config,
-              details,
-              likedIssues,
-              issues,
-            ),
-          ].join('\n')
+          result.push(
+            [
+              renderLikedIssuesTitle(timespan, config, likedIssues, issues),
+              renderLikedIssuesDetail(
+                timespan,
+                config,
+                details,
+                likedIssues,
+                issues,
+              ),
+            ].join('\n'),
+          )
         }
       }
 
@@ -189,15 +189,17 @@ export namespace Issues {
           .slice(0, config.publishTopHotIssues)
 
         if (hotIssues.length > 0) {
-          result += [
-            renderHotIssuesTitle(timespan, config, hotIssues, issues),
-            renderHotIssuesDetail(timespan, config, hotIssues, issues),
-          ].join('\n')
+          result.push(
+            [
+              renderHotIssuesTitle(timespan, config, hotIssues, issues),
+              renderHotIssuesDetail(timespan, config, hotIssues, issues),
+            ].join('\n'),
+          )
         }
       }
     }
 
-    return result
+    return result.join('\n')
   }
 
   type IssueList = Await<ReturnType<typeof list>>
@@ -225,7 +227,7 @@ export namespace Issues {
       issues,
       openIssues,
       closedIssues,
-    })
+    }).replace(/\n/g, ' ')
   }
 
   function renderOpenIssuesTitle(
