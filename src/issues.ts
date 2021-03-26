@@ -1,11 +1,11 @@
 import moment from 'moment'
 import { context } from '@actions/github'
 import { octokit } from './octokit'
-import { Await } from './types'
+import { Await, Config } from './types'
+import { Reactions } from './reactions'
 
 export namespace Issues {
   export async function list(tailDate: string) {
-    octokit.issues.get()
     const issues = await octokit.paginate(octokit.issues.listForRepo, {
       ...context.repo,
       state: 'all',
@@ -51,8 +51,10 @@ export namespace Issues {
 
   export function render(
     issues: IssueList = [],
+    reactions: { [issue: number]: Reactions.ReactionsList },
     headDate: string,
     tailDate: string,
+    config: Config,
   ) {
     let result = '# ISSUES\n'
 
@@ -125,74 +127,125 @@ export namespace Issues {
         result += temp.join('\n')
       }
 
-      // To get the most recent liked or noisy issue
-      // -------------------------------------------
+      // For Liked issue
+      // ---------------
+      if (config.topLikedIssues > 0) {
+        const likeMap: { [issue: number]: number } = {}
+        const likeTypes = ['+1', 'laugh', 'hooray', 'heart', 'rocket']
 
-      // const likedIssueStrings: string[] = []
-      // const noisyIssueStrings: string[] = []
-      // data.reverse()
+        data.forEach((issue) => {
+          likeMap[issue.number] = reactions[issue.number].reduce(
+            (memo, { content }) => memo + (likeTypes.includes(content) ? 1 : 0),
+            0,
+          )
+        })
 
-      // // For Liked issue
-      // // ---------------
-      // const likedIssues = data.filter(
-      //   (item) =>
-      //     item.reactions['+1'] +
-      //       item.reactions.laugh +
-      //       item.reactions.hooray +
-      //       item.reactions.heart >
-      //     0,
-      // )
+        const likedIssues = data
+          .filter((issue) => likeMap[issue.number] > 0)
+          .sort((a, b) => likeMap[b.number] - likeMap[a.number])
+          .slice(0, config.topLikedIssues)
 
-      // if (likedIssues.length > 0) {
-      //   likedIssueStrings.push('## LIKED ISSUE')
-      //   let likedIssue = likedIssues[0]
-      //   likedIssues.forEach((issue) => {
-      //     if (
-      //       issue.reactions['+1'] +
-      //         issue.reactions.laugh +
-      //         issue.reactions.hooray +
-      //         issue.reactions.heart >
-      //       likedIssue.reactions['+1'] +
-      //         likedIssue.reactions.laugh +
-      //         likedIssue.reactions.hooray +
-      //         likedIssue.reactions.heart
-      //     ) {
-      //       likedIssue = issue
-      //     }
-      //   })
-      //   likedIssueStrings.push(
-      //     `:+1: ${link(likedIssue)}, by ${user(likedIssue)}`,
-      //   )
-      //   likedIssueStrings.push(
-      //     `It received :+1: x${likedIssue.reactions['+1']}, :smile: x${likedIssue.reactions.laugh}, :tada: x${likedIssue.reactions.hooray} and :heart: x${likedIssue.reactions.heart}.`,
-      //   )
-      // }
+        if (likedIssues.length > 0) {
+          const temp: string[] = [
+            likedIssues.length > 1
+              ? `## TOP ${likedIssues.length} LIKED ISSUES`
+              : '## MOST LIKED ISSUE',
+          ]
 
-      // if (likedIssueStrings.length > 0) {
-      //   result += likedIssueStrings.join('\n')
-      // }
+          const details = (issue: IssueList[0]) => {
+            let plus = 0
+            let laugh = 0
+            let hooray = 0
+            let heart = 0
+            let rocket = 0
+            reactions[issue.number].forEach(({ content }) => {
+              if (content === '+1') {
+                plus += 1
+              } else if (content === 'laugh') {
+                laugh += 1
+              } else if (content === 'hooray') {
+                hooray += 1
+              } else if (content === 'heart') {
+                heart += 1
+              } else if (content === 'rocket') {
+                rocket += 1
+              }
+            })
 
-      // // For Noisy issue
-      // // ---------------
-      // const noisyIssues = data.filter((item) => item.comments > 0)
-      // if (noisyIssues.length > 0) {
-      //   noisyIssueStrings.push('## NOISY ISSUE')
-      //   let noisyIssue = noisyIssues[0]
-      //   noisyIssues.forEach((item) => {
-      //     if (item.comments > noisyIssue.comments) {
-      //       noisyIssue = item
-      //     }
-      //   })
-      //   noisyIssueStrings.push(
-      //     `:speaker: ${link(noisyIssue)}, by ${user(noisyIssue)}`,
-      //   )
+            const result: string[] = []
+            if (plus > 0) {
+              result.push(`:+1: x${plus}`)
+            }
 
-      //   noisyIssueStrings.push(`It received ${noisyIssue.comments} comments.\n`)
-      // }
+            if (laugh > 0) {
+              result.push(`:smile: x${laugh}`)
+            }
 
-      // if (noisyIssueStrings.length > 0) {
-      //   result += noisyIssueStrings.join('\n')
-      // }
+            if (hooray > 0) {
+              result.push(`:tada: x${hooray}`)
+            }
+
+            if (heart > 0) {
+              result.push(`:heart: x${heart}`)
+            }
+
+            if (rocket > 0) {
+              result.push(`:rocket: x${rocket}`)
+            }
+
+            return result.join(', ')
+          }
+
+          if (likedIssues.length === 1) {
+            const issue = likedIssues[0]
+            temp.push(`:+1: ${link(issue)}, by ${user(issue)}`)
+            temp.push(`It received ${details(issue)}.`)
+          } else {
+            likedIssues.forEach((issue) => {
+              temp.push(
+                `:+1: ${link(issue)}, by ${user(issue)}, received ${details(
+                  issue,
+                )}.`,
+              )
+            })
+          }
+
+          result += temp.join('\n')
+        }
+      }
+
+      // For Hot issue
+      // ---------------
+      if (config.topHotIssues > 0) {
+        const hotIssues = data
+          .filter((item) => item.comments > 0)
+          .sort((a, b) => b.comments - a.comments)
+          .slice(0, config.topHotIssues)
+
+        if (hotIssues.length > 0) {
+          const temp: string[] = [
+            hotIssues.length > 1
+              ? `## TOP ${hotIssues.length} HOT ISSUES`
+              : '## HOTTEST ISSUE',
+          ]
+
+          if (hotIssues.length === 1) {
+            const issue = hotIssues[0]
+            temp.push(`:speaker: ${link(issue)}, by ${user(issue)}`)
+            temp.push(`It received ${issue.comments} comments.`)
+          } else {
+            hotIssues.forEach((issue) => {
+              temp.push(
+                `:speaker: ${link(issue)}, by ${user(issue)}, received ${
+                  issue.comments
+                } comments.`,
+              )
+            })
+          }
+
+          result += temp.join('\n')
+        }
+      }
     }
 
     return result

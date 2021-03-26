@@ -29,18 +29,15 @@ export namespace PullRequests {
     let result = '# PULL REQUESTS\n'
     const data = pullRequests.filter(
       (pr) =>
-        (moment(pr.created_at).isBetween(tailDate, headDate) &&
-          pr.state === 'open' &&
-          !pr.merged_at &&
-          moment(pr.created_at).isSame(pr.updated_at) &&
-          pr.user!.login !== 'weekly-digest[bot]') ||
-        (moment(pr.updated_at).isBetween(tailDate, headDate) &&
-          pr.state === 'open' &&
-          !pr.merged_at &&
-          pr.user!.login !== 'weekly-digest[bot]') ||
+        (pr.state === 'open' &&
+          pr.merged_at == null &&
+          moment(pr.created_at).isBetween(tailDate, headDate) &&
+          moment(pr.created_at).isSame(pr.updated_at)) ||
+        (pr.state === 'open' &&
+          pr.merged_at == null &&
+          moment(pr.updated_at).isBetween(tailDate, headDate)) ||
         (moment(pr.merged_at).isBetween(tailDate, headDate) &&
-          pr.state === 'closed' &&
-          pr.user!.login !== 'weekly-digest[bot]'),
+          pr.state === 'closed'),
     )
 
     const total = data.length

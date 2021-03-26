@@ -39,12 +39,26 @@ export namespace Util {
   export const getDayBeforeDate = (date: moment.MomentInput) =>
     moment(date).subtract(1, 'days').format()
 
+  const numberInput = (name: string, defaultValue: number) => {
+    const raw = core.getInput(name)
+    if (raw === 'true') {
+      return defaultValue
+    }
+    if (raw === 'false') {
+      return 0
+    }
+    const num = parseInt(raw, 10)
+    return Number.isFinite(num) ? num : defaultValue
+  }
+
   export function getInputs() {
     const days = parseInt(core.getInput('prs'), 10) || 7
     return {
       days: Number.isFinite(days) ? days : 7,
       pulls: core.getInput('pulls') !== 'false',
       issues: core.getInput('issues') !== 'false',
+      topHotIssues: numberInput('top_hot_issues', 3),
+      topLikedIssues: numberInput('top_liked_issues', 3),
       commits: core.getInput('commits') !== 'false',
       releases: core.getInput('releases') !== 'false',
       stargazers: core.getInput('stargazers') !== 'false',

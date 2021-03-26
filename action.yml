@@ -17,6 +17,16 @@ inputs:
     description: Should publish issues or not.
     default: true
 
+  top_liked_issues:
+    required: false
+    description: Should publish top liked issues with most positive reactions or not, or the count of top liked issues to publish.
+    default: 3
+
+  top_hot_issues:
+    required: false
+    description: Should publish top hot issues with most comments or not, or the count of top hot issues to publish.
+    default: 3
+
   pulls:
     required: false
     description: Should publish pull requests or not.

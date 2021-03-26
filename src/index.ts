@@ -7,6 +7,7 @@ import { Commits } from './commits'
 import { Releases } from './releases'
 import { Stargazers } from './stargazers'
 import { PullRequests } from './pulls'
+import { Reactions } from './reactions'
 
 async function checkDuplicates(headDate: string) {
   const author = 'app/weekly-digest'
@@ -17,16 +18,10 @@ async function checkDuplicates(headDate: string) {
     author,
     type,
   })
-  const totalCount = issues.data.total_count
-  if (totalCount >= 1) {
-    return {
-      duplicated: true,
-      url: issues.data.items[0].html_url,
-    }
-  }
+  const total = issues.data.total_count
   return {
-    duplicated: false,
-    url: undefined,
+    duplicated: total >= 1,
+    url: total >= 1 ? issues.data.items[0].html_url : undefined,
   }
 }
 
@@ -47,7 +42,11 @@ async function markdownBody(
 
   if (config.issues) {
     const issues = await Issues.list(tailDate)
-    issuesString = Issues.render(issues, headDate, tailDate)
+    const reactions =
+      config.topLikedIssues > 0
+        ? await Reactions.map(issues.map((issue) => issue.number))
+        : []
+    issuesString = Issues.render(issues, reactions, headDate, tailDate, config)
   }
 
   if (config.pulls) {
@@ -117,7 +116,7 @@ async function run() {
 
   const fromDate = Util.formatDateInTitle(tailDate)
   const toDate = Util.formatDateInTitle(headDate)
-  const title = `Weekly Digest (${fromDate}} - ${toDate})`
+  const title = `Weekly Digest (${fromDate} - ${toDate})`
   const body = await markdownBody(headDate, tailDate, config)
   const labels = ['weekly-digest']
   await Issues.create(title, body, labels)
