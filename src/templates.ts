@@ -69,7 +69,7 @@ export namespace Templates {
 
   export const likedIssuesTitle = `
   <% if (likedIssues.length > 1) { %>
-    ## TOP <%= likedIssues.length %> LIKED ISSUES
+    ## TOP <%= likedIssues.length %> MOST LIKED ISSUES
   <% } else { %>
     ## MOST LIKED ISSUE
   <% } %>
@@ -77,32 +77,46 @@ export namespace Templates {
   export const likedIssuesDetail = `
   <% if (likedIssues.length === 1) { %>
     <% var issue = likedIssues[0] %>
-    :+1: ${issueLink} by ${issueUser}
-    It received <%= details[0] %>.
+
+:+1: ${issueLink} by ${issueUser}
+
+It received <%= details[0] %>.
+
   <% } else { %>
     <% for (var i = 0, l = likedIssues.length; i < l; i+=1) { %>
       <% var issue = likedIssues[i] %>
-      :speaker: ${issueLink} by ${issueUser}, received <%= details[i] %>.
+
+:speaker: ${issueLink} by ${issueUser}, received <%= details[i] %>.
+
     <% } %>
   <% } %>
   `
 
   export const hotIssuesTitle = `
     <% if (hotIssues.length > 1) { %>
-      ## TOP <%= hotIssues.length %> HOT ISSUES
+
+      ## TOP <%= hotIssues.length %> MOST HOT ISSUES
+
     <% } else { %>
-      ## HOTTEST ISSUE
+
+      ## MOST HOTT ISSUE
+
     <% } %>
   `
   export const hotIssuesDetail = `
   <% if (hotIssues.length === 1) { %>
     <% var issue = hotIssues[0] %>
+
 :speaker: ${issueLink} by ${issueUser}
+
 It received <%= issue.comments %> comments.
+
   <% } else { %>
     <% for (var i = 0, l = hotIssues.length; i < l; i+=1) { %>
       <% var issue = hotIssues[i] %>
+
 :speaker: ${issueLink} by ${issueUser}, received <%= issue.comments %> comments.
+
     <% } %>
   <% } %>
   `
