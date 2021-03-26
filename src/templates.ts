@@ -59,7 +59,7 @@ export namespace Templates {
   `
 
   const issueLink =
-    '#<%= issue.number %> [<%= issue.title %>](<% issue.html_url %>)'
+    '#<%= issue.number %> [<%= issue.title %>](<%= issue.html_url %>)'
   const issueUser = '[<%= issue.user.login %>](<%= issue.user.html_url %>)'
 
   export const openIssuesTitle = '## OPEN ISSUES'

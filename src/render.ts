@@ -35,7 +35,7 @@ export namespace Renderer {
         config.publishTopLikedIssues > 0
           ? await Reactions.map(issues.map((issue) => issue.number))
           : []
-      core.info(`issues: ${JSON.stringify(issues)}`)
+      core.debug(`issues: ${JSON.stringify(issues)}`)
       issuesString = Issues.render(issues, reactions, timespan, config)
     }
 
