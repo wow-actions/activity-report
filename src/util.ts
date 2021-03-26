@@ -143,8 +143,7 @@ export namespace Util {
       ...timespan,
       ...data,
       context,
-    })
-    // .trim()
+    }).trim()
     // .replace(/\n/g, ' ')
   }
 
