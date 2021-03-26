@@ -146,7 +146,7 @@ export namespace Templates {
   export const commitsSummary = `
     <% if (commits.length === 0) { %>
       Last week there were no commits.
-    <% else if (commits.length === 1) { %>
+    <% } else if (commits.length === 1) { %>
       Last week there was 1 commit.
     <% } else { %>
       Last week there were  <%= commits.length %> commits.
@@ -160,7 +160,7 @@ export namespace Templates {
   export const contributorsSummary = `
     <% if (contributors.length === 0) { %>
       Last week there were no contributors.
-    <% else if (contributors.length === 1) { %>
+    <% } else if (contributors.length === 1) { %>
       Last week there was 1 contributor.
     <% } else { %>
       Last week there were  <%= contributors.length %> contributors.
