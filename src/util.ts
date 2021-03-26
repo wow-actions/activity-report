@@ -16,7 +16,7 @@ export namespace Util {
     })
 
     let fromDateString: string
-    const toDateString = current.format()
+    const toDateString = current.add(1, 'days').format()
 
     const cron = context.payload.schedule as string
     if (cron) {
