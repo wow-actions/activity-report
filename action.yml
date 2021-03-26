@@ -1,0 +1,51 @@
+name: WIP Action
+description: Mark a pull request commits with pending state if it finds specified terms in the pull request title or label.
+author: bubkoo <bubkoo.wy@gmail.com>
+
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    description: Your GitHub token for authentication.
+
+  days:
+    required: false
+    description: How many days before now to collect metadata.
+    default: 7
+
+  issues:
+    required: false
+    description: Should publish issues or not.
+    default: true
+
+  pulls:
+    required: false
+    description: Should publish pull requests or not.
+    default: true
+
+  contributors:
+    required: false
+    description: Should publish contributors or not.
+    default: true
+
+  stargazers:
+    required: false
+    description: Should publish stargazers or not.
+    default: true
+
+  commits:
+    required: false
+    description: Should publish commits or not.
+    default: true
+
+  releases:
+    required: false
+    description: Should publish releases or not.
+    default: true
+
+runs:
+  using: node12
+  main: dist/index.js
+
+branding:
+  icon: alert-triangle
+  color: yellow
