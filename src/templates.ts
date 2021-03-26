@@ -7,7 +7,7 @@ export namespace Templates {
     '\n - - - \n' +
     '\n' +
     `That's all for last week, please <kbd>:eyes: **Watch**</kbd> and <kbd>:star: **Star**</kbd> the repository [*{{ owner }}/{{ repo }}*](https://github.com/{{ owner }}/{{ repo }}) to receive next weekly updates. :smiley:\n\n` +
-    `*You can also [view all Weekly Digests by clicking here](https://github.com/{{ owner }}/{{ repo %%/issues?q=is:open+is:issue+label:weekly-digest).* \n\n`
+    `*You can also [view all Weekly Digests by clicking here](https://github.com/{{ owner }}/{{ repo }}/issues?q=is:open+is:issue+label:weekly-digest).* \n\n`
 
   export const issuesTitle = '# ISSUES'
 
@@ -97,12 +97,12 @@ export namespace Templates {
   export const hotIssuesDetail = `
   <% if (hotIssues.length === 1) { %>
     <% var issue = hotIssues[0] %>
-    :speaker: ${issueLink} by ${issueUser}
-    It received <%= issue.comments %> comments.
+:speaker: ${issueLink} by ${issueUser}
+It received <%= issue.comments %> comments.
   <% } else { %>
     <% for (var i = 0, l = hotIssues.length; i < l; i+=1) { %>
       <% var issue = hotIssues[i] %>
-      :speaker: ${issueLink} by ${issueUser}, received <%= issue.comments %> comments.
+:speaker: ${issueLink} by ${issueUser}, received <%= issue.comments %> comments.
     <% } %>
   <% } %>
   `
