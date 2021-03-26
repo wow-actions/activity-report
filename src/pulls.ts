@@ -1,8 +1,8 @@
 import moment from 'moment'
 import { context } from '@actions/github'
+import { Util } from './util'
 import { octokit } from './octokit'
 import { Await, Config, Timespan } from './types'
-import { Util } from './util'
 
 export namespace PullRequests {
   export async function list() {

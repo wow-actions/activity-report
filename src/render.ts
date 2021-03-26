@@ -47,13 +47,13 @@ export namespace Renderer {
     if (config.publishCommits || config.publishCommits) {
       const commits = await Commits.list(tailDate)
       if (config.publishCommits) {
-        commitsString = Commits.render(commits, headDate, tailDate)
+        commitsString = Commits.render(commits, timespan, config)
       }
       if (config.publishContributors) {
         contributorsString = Commits.renderContributors(
           commits,
-          headDate,
-          tailDate,
+          timespan,
+          config,
         )
       }
     }

@@ -1,7 +1,8 @@
 import moment from 'moment'
 import { context } from '@actions/github'
+import { Util } from './util'
 import { octokit } from './octokit'
-import { Await } from './types'
+import { Await, Config, Timespan } from './types'
 
 export namespace Commits {
   export async function list(tailDate: string) {
@@ -16,87 +17,169 @@ export namespace Commits {
 
   type CommitList = Await<ReturnType<typeof list>>
 
-  const link = (commit: CommitList[0]) =>
+  const commitLink = (commit: CommitList[0]) =>
     `[${commit.commit.message.replace(/\n/g, ' ')}](${commit.html_url})`
 
-  const user = (commit: CommitList[0]) =>
+  const userLink = (commit: CommitList[0]) =>
     `[${commit.author!.login}](${commit.author!.html_url})`
 
   export function render(
-    commits: CommitList = [],
-    headDate: string,
-    tailDate: string,
+    commitList: CommitList = [],
+    timespan: Timespan,
+    config: Config,
   ) {
-    let result = '# COMMITS\n'
-    const data = commits.filter(
-      (item) =>
-        moment(item.commit.committer!.date).isBetween(tailDate, headDate) &&
-        item.author!.login !== 'weekly-digest[bot]',
+    const fromDate = timespan.fromDateString
+    const toDate = timespan.toDateString
+    const commits = commitList.filter((item) =>
+      moment(item.commit.committer!.date).isBetween(fromDate, toDate),
+    )
+    const result: string[] = []
+
+    result.push(
+      renderCommitsTitle(timespan, config, commits),
+      renderCommitssSummary(timespan, config, commits),
+      commits
+        .map((commit) => renderCommitsItem(timespan, config, commit, commits))
+        .join('\n'),
     )
 
-    const total = data.length
-    if (total === 0) {
-      result += 'Last week there were no commits.\n'
-    } else {
-      if (total === 1) {
-        result += `Last week there was ${total} commit.\n`
-      } else {
-        result += `Last week there were ${total} commits.\n`
-      }
-
-      data.forEach((commit) => {
-        result += `:hammer_and_wrench: ${link(commit)} by ${user(commit)}\n`
-      })
-    }
-
-    return result
+    return result.join('\n')
   }
 
   export function renderContributors(
     commits: CommitList = [],
-    headDate: string,
-    tailDate: string,
+    timespan: Timespan,
+    config: Config,
   ) {
-    const data = commits.filter(
-      (item) =>
-        moment(item.commit.committer!.date).isBetween(tailDate, headDate) &&
-        item.author!.login !== 'weekly-digest[bot]',
+    const fromDate = timespan.fromDateString
+    const toDate = timespan.toDateString
+    const contributors = commits.filter((item) =>
+      moment(item.commit.committer!.date).isBetween(fromDate, toDate),
     )
 
-    let result = '# CONTRIBUTORS\n'
-    if (data.length === 0) {
-      result += 'Last week there were no contributors.\n'
-    } else {
-      const contributors: { login: string; url: string }[] = []
-      data.forEach((item) => {
-        contributors.push({
-          login: item.author!.login,
-          url: item.author!.html_url,
-        })
+    const result: string[] = []
+    const cache: { login: string; url: string }[] = []
+    contributors.forEach((item) => {
+      cache.push({
+        login: item.author!.login,
+        url: item.author!.html_url,
       })
+    })
 
-      const uniques: {
-        login: string
-        url: string
-      }[] = Object.values(
-        contributors.reduce(
-          (acc, cul) => Object.assign(acc, { [cul.login]: cul }),
-          {},
-        ),
-      )
+    const uniques: {
+      login: string
+      url: string
+    }[] = Object.values(
+      cache.reduce((acc, cul) => Object.assign(acc, { [cul.login]: cul }), {}),
+    )
 
-      const total = uniques.length
-      if (total === 1) {
-        result += `Last week there was ${total} contributor.\n`
-      } else {
-        result += `Last week there were ${total} contributors.\n`
-      }
+    result.push(
+      renderContributorsTitle(timespan, config, uniques),
+      renderContributorssSummary(timespan, config, uniques),
+      uniques
+        .map((contributor) =>
+          renderContributorsItem(timespan, config, contributor, uniques),
+        )
+        .join('\n'),
+    )
 
-      uniques.forEach((u) => {
-        result += `:bust_in_silhouette: [${u.login}](${u.url})\n`
-      })
-    }
+    return result.join('\n')
+  }
 
-    return result
+  function renderCommitsTitle(
+    timespan: Timespan,
+    config: Config,
+    commits: CommitList,
+  ) {
+    return Util.render(
+      config.templateCommitsTitle,
+      timespan,
+      {
+        commits,
+      },
+      true,
+    )
+  }
+
+  function renderCommitssSummary(
+    timespan: Timespan,
+    config: Config,
+    commits: CommitList,
+  ) {
+    return Util.render(
+      config.templateCommitsSummary,
+      timespan,
+      {
+        commits,
+      },
+      true,
+    )
+  }
+
+  function renderCommitsItem(
+    timespan: Timespan,
+    config: Config,
+    commit: CommitList[0],
+    commits: CommitList,
+  ) {
+    return Util.render(
+      config.templateCommitsItem,
+      timespan,
+      {
+        commit,
+        commits,
+        commitLink: commitLink(commit),
+        userLink: userLink(commit),
+      },
+      true,
+    )
+  }
+
+  function renderContributorsTitle(
+    timespan: Timespan,
+    config: Config,
+    contributors: { login: string; url: string }[],
+  ) {
+    return Util.render(
+      config.templateContributorsTitle,
+      timespan,
+      {
+        contributors,
+      },
+      true,
+    )
+  }
+
+  function renderContributorssSummary(
+    timespan: Timespan,
+    config: Config,
+    contributors: { login: string; url: string }[],
+  ) {
+    return Util.render(
+      config.templateContributorsSummary,
+      timespan,
+      {
+        contributors,
+      },
+      true,
+    )
+  }
+
+  function renderContributorsItem(
+    timespan: Timespan,
+    config: Config,
+    contributor: { login: string; url: string },
+    contributors: { login: string; url: string }[],
+  ) {
+    return Util.render(
+      config.templateContributorsItem,
+      timespan,
+      {
+        contributor,
+        contributors,
+        userLink: `[${contributor.login}](${contributor.url})`,
+      },
+      true,
+    )
   }
 }

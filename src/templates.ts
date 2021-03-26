@@ -1,15 +1,13 @@
 export namespace Templates {
   export const title = 'Weekly Digest ({{ fromDate }} - {{ toDate }})'
-
   export const header = `Here's the **Weekly Digest** for [*{{ owner }}/ {{ repo }}*](https://github.com/{{ owner }}/{{ repo }}):\n`
-
   export const footer =
     '\n - - - \n' +
     '\n' +
     `That's all for last week, please <kbd>:eyes: **Watch**</kbd> and <kbd>:star: **Star**</kbd> the repository [*{{ owner }}/{{ repo }}*](https://github.com/{{ owner }}/{{ repo }}) to receive next weekly updates. :smiley:\n\n` +
     `*You can also [view all Weekly Digests by clicking here](https://github.com/{{ owner }}/{{ repo }}/issues?q=is:open+is:issue+label:weekly-digest).* \n\n`
 
-  // Issues
+  // ISSUES
   // ------
   export const issuesTitle = '# ISSUES'
 
@@ -100,7 +98,7 @@ export namespace Templates {
   `
   export const hotIssuesItem = `:speaker: #<%= issue.number %> <%= issueLink %> by <%= userLink%>, received <%= issue.comments %> comments.`
 
-  // Pull Requests
+  // PULL REQUESTS
   // -------------
   export const pullRequestsTitle = '# PULL REQUESTS'
   export const pullRequestsSummary = `
@@ -141,4 +139,38 @@ export namespace Templates {
     <% }  %>
   `
   export const mergedPullRequestsItem = `:purple_heart: #<%= pullRequest.number %> <%= pullRequestLink %> by <%= userLink%>`
+
+  // COMMITS
+  // -------
+  export const commitsTitle = `# COMMITS`
+  export const commitsSummary = `
+    <% if (commits.length === 0) { %>
+      Last week there were no commits.
+    <% else if (commits.length === 1) { %>
+      Last week there was 1 commit.
+    <% } else { %>
+      Last week there were  <%= commits.length %> commits.
+    <% }  %>
+  `
+  export const commitsItem = `:hammer_and_wrench: <%= commitLink %> by <%= userLink%>`
+
+  // CONTRIBUTORS
+  // ------------
+  export const contributorsTitle = `# CONTRIBUTORS`
+  export const contributorsSummary = `
+    <% if (contributors.length === 0) { %>
+      Last week there were no contributors.
+    <% else if (contributors.length === 1) { %>
+      Last week there was 1 contributor.
+    <% } else { %>
+      Last week there were  <%= contributors.length %> contributors.
+    <% }  %>
+  `
+  export const contributorsItem = `:bust_in_silhouette: <%= userLink%>`
+
+  // STARGAZERS
+  // ----------
+
+  // RELEASES
+  // --------
 }

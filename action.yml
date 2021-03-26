@@ -138,6 +138,26 @@ inputs:
     description: Template to render merged pull requests item.
     required: false
 
+  template_commits_title:
+    description: Template to render commits title.
+    required: false
+  template_commits_summary:
+    description: Template to render commits summary.
+    required: false
+  template_commits_item:
+    description: Template to render commits item.
+    required: false
+
+  template_contributors_title:
+    description: Template to render contributors title.
+    required: false
+  template_contributors_summary:
+    description: Template to render contributors summary.
+    required: false
+  template_contributors_item:
+    description: Template to render contributors item.
+    required: false
+
 runs:
   using: node12
   main: dist/index.js

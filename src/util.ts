@@ -173,7 +173,7 @@ export namespace Util {
       templateHeader: input('template_header', Templates.header),
       templateFooter: input('template_footer', Templates.footer),
 
-      // issues
+      // ISSUES
       // ------
       templateIssuesTitle: input(
         'template_issues_title',
@@ -228,8 +228,8 @@ export namespace Util {
         Templates.hotIssuesItem,
       ),
 
-      // prs
-      // ---
+      // PULL REQUESTS
+      // -------------
       templatePullRequestsTitle: input(
         'template_pull_requests_title',
         Templates.pullRequestsTitle,
@@ -277,6 +277,42 @@ export namespace Util {
         'template_merged_pull_requests_item',
         Templates.mergedPullRequestsItem,
       ),
+
+      // COMMITS
+      // -------
+      templateCommitsTitle: input(
+        'template_commits_title',
+        Templates.commitsTitle,
+      ),
+      templateCommitsSummary: input(
+        'template_commits_summary',
+        Templates.commitsSummary,
+      ),
+      templateCommitsItem: input(
+        'template_commits_item',
+        Templates.commitsItem,
+      ),
+
+      // CONTRIBUTORS
+      // ------------
+      templateContributorsTitle: input(
+        'template_contributors_title',
+        Templates.contributorsTitle,
+      ),
+      templateContributorsSummary: input(
+        'template_contributors_summary',
+        Templates.contributorsSummary,
+      ),
+      templateContributorsItem: input(
+        'template_contributors_item',
+        Templates.contributorsItem,
+      ),
+
+      // STARGAZERS
+      // ----------
+
+      // RELEASES
+      // --------
     }
   }
 }

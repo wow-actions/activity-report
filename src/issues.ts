@@ -1,9 +1,9 @@
 import moment from 'moment'
 import { context } from '@actions/github'
 import { octokit } from './octokit'
-import { Await, Config, Timespan } from './types'
-import { Reactions } from './reactions'
 import { Util } from './util'
+import { Reactions } from './reactions'
+import { Await, Config, Timespan } from './types'
 
 export namespace Issues {
   export async function list(fromDate: string) {
@@ -54,15 +54,17 @@ export namespace Issues {
     timespan: Timespan,
     config: Config,
   ) {
-    const fromDate = timespan.toDateString
-    const toDate = timespan.fromDateString
     const result: string[] = []
 
     result.push(renderTitle(timespan, config))
 
     const issues = issueList.filter(
       (issue) =>
-        moment(issue.created_at).isBetween(toDate, fromDate) &&
+        issue.pull_request == null &&
+        moment(issue.created_at).isBetween(
+          timespan.fromDateString,
+          timespan.toDateString,
+        ) &&
         issue.user!.login !== 'weekly-digest[bot]',
     )
 
