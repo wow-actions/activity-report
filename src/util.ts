@@ -173,6 +173,8 @@ export namespace Util {
       templateHeader: input('template_header', Templates.header),
       templateFooter: input('template_footer', Templates.footer),
 
+      // issues
+      // ------
       templateIssuesTitle: input(
         'template_issues_title',
         Templates.issuesTitle,
@@ -224,6 +226,56 @@ export namespace Util {
       templateHotIssuesItem: input(
         'template_hot_issues_item',
         Templates.hotIssuesItem,
+      ),
+
+      // prs
+      // ---
+      templatePullRequestsTitle: input(
+        'template_pull_requests_title',
+        Templates.pullRequestsTitle,
+      ),
+      templatePullRequestsSummary: input(
+        'template_pull_requests_summary',
+        Templates.pullRequestsSummary,
+      ),
+
+      templateOpenPullRequestsTitle: input(
+        'template_open_pull_requests_title',
+        Templates.openPullRequestsTitle,
+      ),
+      templateOpenPullRequestsSummary: input(
+        'template_open_pull_requests_summary',
+        Templates.openPullRequestsSummary,
+      ),
+      templateOpenPullRequestsItem: input(
+        'template_open_pull_requests_item',
+        Templates.openPullRequestsItem,
+      ),
+
+      templateUpdatedPullRequestsTitle: input(
+        'template_updated_pull_requests_title',
+        Templates.updatedPullRequestsTitle,
+      ),
+      templateUpdatedPullRequestsSummary: input(
+        'template_updated_pull_requests_summary',
+        Templates.updatedPullRequestsSummary,
+      ),
+      templateUpdatedPullRequestsItem: input(
+        'template_updated_pull_requests_item',
+        Templates.updatedPullRequestsItem,
+      ),
+
+      templateMergedPullRequestsTitle: input(
+        'template_merged_pull_requests_title',
+        Templates.mergedPullRequestsTitle,
+      ),
+      templateMergedPullRequestsSummary: input(
+        'template_merged_pull_requests_summary',
+        Templates.mergedPullRequestsSummary,
+      ),
+      templateMergedPullRequestsItem: input(
+        'template_merged_pull_requests_item',
+        Templates.mergedPullRequestsItem,
       ),
     }
   }

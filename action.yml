@@ -101,6 +101,43 @@ inputs:
     description: Template to render hot issues item.
     required: false
 
+  template_pull_requests_title:
+    description: Template to render pull requests title.
+    required: false
+  template_pull_requests_summary:
+    description: Template to render pull requests summary.
+    required: false
+
+  template_open_pull_requests_title:
+    description: Template to render open pull requests title.
+    required: false
+  template_open_pull_requests_summary:
+    description: Template to render open pull requests summary.
+    required: false
+  template_open_pull_requests_item:
+    description: Template to render open pull requests item.
+    required: false
+
+  template_updaed_pull_requests_title:
+    description: Template to render updaed pull requests title.
+    required: false
+  template_updaed_pull_requests_summary:
+    description: Template to render updaed pull requests summary.
+    required: false
+  template_updaed_pull_requests_item:
+    description: Template to render updaed pull requests item.
+    required: false
+
+  template_merged_pull_requests_title:
+    description: Template to render merged pull requests title.
+    required: false
+  template_merged_pull_requests_summary:
+    description: Template to render merged pull requests summary.
+    required: false
+  template_merged_pull_requests_item:
+    description: Template to render merged pull requests item.
+    required: false
+
 runs:
   using: node12
   main: dist/index.js

@@ -41,7 +41,7 @@ export namespace Renderer {
 
     if (config.publishPulls) {
       const pullRequests = await PullRequests.list()
-      pullRequestsString = PullRequests.render(pullRequests, headDate, tailDate)
+      pullRequestsString = PullRequests.render(pullRequests, timespan, config)
     }
 
     if (config.publishCommits || config.publishCommits) {

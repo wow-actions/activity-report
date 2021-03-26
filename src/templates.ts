@@ -9,6 +9,8 @@ export namespace Templates {
     `That's all for last week, please <kbd>:eyes: **Watch**</kbd> and <kbd>:star: **Star**</kbd> the repository [*{{ owner }}/{{ repo }}*](https://github.com/{{ owner }}/{{ repo }}) to receive next weekly updates. :smiley:\n\n` +
     `*You can also [view all Weekly Digests by clicking here](https://github.com/{{ owner }}/{{ repo }}/issues?q=is:open+is:issue+label:weekly-digest).* \n\n`
 
+  // Issues
+  // ------
   export const issuesTitle = '# ISSUES'
 
   export const issuesSummary = `
@@ -58,18 +60,14 @@ export namespace Templates {
   <% } %>
   `
 
-  const issueLink =
-    '#<%= issue.number %> [<%= issue.title %>](<%= issue.html_url %>)'
-  const issueUser = '[<%= issue.user.login %>](<%= issue.user.html_url %>)'
-
   export const openIssuesTitle = '## OPEN ISSUES'
-  export const openIssuesItem = `:green_heart: ${issueLink} by ${issueUser}`
+  export const openIssuesItem = `:green_heart: #<%= issue.number %> <%= issueLink %> by <%= userLink%>`
   export const closedIssuesTitle = '## CLOSED ISSUES'
-  export const closedIssuesItem = `:heart: ${issueLink} by ${issueUser}`
+  export const closedIssuesItem = `:heart: #<%= issue.number %> <%= issueLink %> by <%= userLink%>`
 
   export const likedIssuesTitle = `
     <% if (likedIssues.length > 1) { %>
-      ## TOP <%= likedIssues.length %> MOST LIKED ISSUES
+      ## TOP <%= likedIssues.length %> LIKED ISSUES
     <% } else { %>
       ## MOST LIKED ISSUE
     <% } %>
@@ -91,14 +89,56 @@ export namespace Templates {
     <%= result.join(', ') %>
   `
 
-  export const likedIssuesItem = `:+1: ${issueLink} by ${issueUser}, received <%= reactions %>.`
+  export const likedIssuesItem = `:+1: #<%= issue.number %> <%= issueLink %> by <%= userLink%>, received <%= reactions %>.`
 
   export const hotIssuesTitle = `
     <% if (hotIssues.length > 1) { %>
-      ## TOP <%= hotIssues.length %> MOST HOT ISSUES
+      ## TOP <%= hotIssues.length %> HOT ISSUES
     <% } else { %>
       ## MOST HOTT ISSUE
     <% } %>
   `
-  export const hotIssuesItem = `:speaker: ${issueLink} by ${issueUser}, received <%= issue.comments %> comments.`
+  export const hotIssuesItem = `:speaker: #<%= issue.number %> <%= issueLink %> by <%= userLink%>, received <%= issue.comments %> comments.`
+
+  // Pull Requests
+  // -------------
+  export const pullRequestsTitle = '# PULL REQUESTS'
+  export const pullRequestsSummary = `
+    <% if (pullRequests.length === 0) { %>
+      Last week, no pull requests were created, updated or merged.
+    <% } else if (pullRequests.length === 1) { %>
+      Last week 1 pull request was created, updated or merged.
+    <% } else { %>
+      Last week <%= pullRequests.length %> pull requests were created, updated or merged.
+    <% }  %>
+`
+  export const openPullRequestsTitle = `## OPEN PULL REQUEST`
+  export const openPullRequestsSummary = `
+    <% if (openPullRequests.length === 1) { %>
+      Last week, 1 pull request was opened.
+    <% } else { %>
+      Last week, <%= openPullRequests.length %> pull requests were opened.
+    <% }  %>
+  `
+  export const openPullRequestsItem = `:green_heart: #<%= pullRequest.number %> <%= pullRequestLink %> by <%= userLink%>`
+
+  export const updatedPullRequestsTitle = `## UPDATED PULL REQUEST`
+  export const updatedPullRequestsSummary = `
+    <% if (updatedPullRequests.length === 1) { %>
+      Last week, 1 pull request was updated.
+    <% } else { %>
+      Last week, <%= updatedPullRequests.length %> pull requests were updated.
+    <% }  %>
+  `
+  export const updatedPullRequestsItem = `:yellow_heart: #<%= pullRequest.number %> <%= pullRequestLink %> by <%= userLink%>`
+
+  export const mergedPullRequestsTitle = `## MERGED PULL REQUEST`
+  export const mergedPullRequestsSummary = `
+    <% if (mergedPullRequests.length === 1) { %>
+      Last week, 1 pull request was merged.
+    <% } else { %>
+      Last week, <%= mergedPullRequests.length %> pull requests were merged.
+    <% }  %>
+  `
+  export const mergedPullRequestsItem = `:purple_heart: #<%= pullRequest.number %> <%= pullRequestLink %> by <%= userLink%>`
 }

@@ -42,6 +42,12 @@ export namespace Issues {
     return res
   }
 
+  const issueLink = (issue: IssueList[0]) =>
+    `#${issue.number} [${issue.title.replace(/\n/g, ' ')}](${issue.html_url})`
+
+  const userLink = (issue: IssueList[0]) =>
+    `[${issue.user!.login}](${issue.user!.html_url})`
+
   export function render(
     issueList: IssueList = [],
     reactions: { [issue: number]: Reactions.ReactionsList },
@@ -259,11 +265,18 @@ export namespace Issues {
     openIssues: IssueList,
     issues: IssueList,
   ) {
-    return Util.render(config.templateOpenIssuesItem, timespan, {
-      issue,
-      issues,
-      openIssues,
-    })
+    return Util.render(
+      config.templateOpenIssuesItem,
+      timespan,
+      {
+        issue,
+        issues,
+        openIssues,
+        issueLink: issueLink(issue),
+        userLink: userLink(issue),
+      },
+      true,
+    )
   }
 
   function renderClosedIssuesTitle(
@@ -290,11 +303,18 @@ export namespace Issues {
     closedIssues: IssueList,
     issues: IssueList,
   ) {
-    return Util.render(config.templateClosedIssuesItem, timespan, {
-      issue,
-      issues,
-      closedIssues,
-    })
+    return Util.render(
+      config.templateClosedIssuesItem,
+      timespan,
+      {
+        issue,
+        issues,
+        closedIssues,
+        issueLink: issueLink(issue),
+        userLink: userLink(issue),
+      },
+      true,
+    )
   }
 
   function renderLikedIssuesTitle(
@@ -358,6 +378,8 @@ export namespace Issues {
           likedIssues,
           issues,
         ),
+        issueLink: issueLink(issue),
+        userLink: userLink(issue),
       },
       true,
     )
@@ -394,6 +416,8 @@ export namespace Issues {
         issue,
         issues,
         hotIssues,
+        issueLink: issueLink(issue),
+        userLink: userLink(issue),
       },
       true,
     )
