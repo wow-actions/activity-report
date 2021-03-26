@@ -128,28 +128,24 @@ export namespace Util {
     // MomentHandler.registerHelpers(Handlebars)
   }
 
-  export function render(template: string): ReturnType<typeof compile>
-  export function render<T>(
+  export function render(
     template: string,
-    timespan: Timespan,
-    data?: T,
-  ): string
-  export function render<T>(template: string, timespan?: Timespan, data?: T) {
+    timespan?: Timespan,
+    data: any = {},
+  ) {
     const raw = template.trim()
     const erb = raw.indexOf('<%') !== -1
 
-    const render = compile(raw, erb ? {} : { interpolate: /\{\{(.+?)\}\}/g })
+    const compiled = compile(raw, erb ? {} : { interpolate: /\{\{(.+?)\}\}/g })
 
-    return data == null
-      ? render
-      : render({
-          ...context.repo,
-          ...timespan,
-          ...data,
-          context,
-        })
-          .trim()
-          .replace(/\n/g, ' ')
+    return compiled({
+      ...context.repo,
+      ...timespan,
+      ...data,
+      context,
+    })
+    // .trim()
+    // .replace(/\n/g, ' ')
   }
 
   export function getInputs() {
