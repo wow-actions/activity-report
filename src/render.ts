@@ -80,6 +80,7 @@ export namespace Renderer {
       }
     })
 
+    body += '\n'
     body += renderFooter(timespan, config)
     body +=
       '> Your [**Weekly Digest**](https://github.com/apps/weekly-digest) bot. :calendar:\n'

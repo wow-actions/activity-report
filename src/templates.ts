@@ -1,11 +1,15 @@
 export namespace Templates {
-  export const title = 'Weekly Digest ({{ fromDate }} - {{ toDate }})'
-  export const header = `Here's the **Weekly Digest** for [*{{ owner }}/ {{ repo }}*](https://github.com/{{ owner }}/{{ repo }}):\n`
+  export const title = 'Weekly Digest (<%= fromDate %> - <%= toDate %>)'
+  export const header = `Here's the **Weekly Digest** for [*<%= owner %>/ <%= repo %>*](https://github.com/<%= owner %>/<%= repo %>):\n`
   export const footer =
     '\n - - - \n' +
     '\n' +
-    `That's all for last week, please <kbd>:eyes: **Watch**</kbd> and <kbd>:star: **Star**</kbd> the repository [*{{ owner }}/{{ repo }}*](https://github.com/{{ owner }}/{{ repo }}) to receive next weekly updates. :smiley:\n\n` +
-    `*You can also [view all Weekly Digests by clicking here](https://github.com/{{ owner }}/{{ repo }}/issues?q=is:open+is:issue+label:weekly-digest).* \n\n`
+    `That's all for last week, please <kbd>:eyes: **Watch**</kbd> and <kbd>:star: **Star**</kbd> the repository [*<%= owner %>/<%= repo %>*](https://github.com/<%= owner %>/<%= repo %>) to receive next weekly updates. :smiley:\n\n` +
+    `
+    <% if(config.addLabels.length) { %>
+      *You can also [view all Weekly Digests by clicking here](https://github.com/<%= owner %>/<%= repo %>/issues?q=is:open+is:issue+label:<%= config.addLabels[0] %>).* \n\n
+    <% } %>
+  `
 
   // ISSUES
   // ------
