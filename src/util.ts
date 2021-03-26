@@ -150,6 +150,9 @@ export namespace Util {
 
   export function getInputs() {
     const days = parseInt(core.getInput('prs'), 10) || 7
+    const input = (name: string, defaultValue?: string) =>
+      core.getInput(name) || defaultValue
+
     return {
       days: Number.isFinite(days) ? days : 7,
       publishPulls: core.getInput('publish_pull_requests') !== 'false',
@@ -166,46 +169,62 @@ export namespace Util {
         .split(/\s?,\s?/)
         .map((label) => label.trim()),
 
-      templateTitle: core.getInput('template_title') || Templates.title,
-      templateHeader: core.getInput('template_header') || Templates.header,
-      templateFooter: core.getInput('template_footer') || Templates.footer,
+      templateTitle: input('template_title', Templates.title),
+      templateHeader: input('template_header', Templates.header),
+      templateFooter: input('template_footer', Templates.footer),
 
-      templateIssuesTitle:
-        core.getInput('template_issues_title') || Templates.issuesTitle,
-      templateIssuesSummary:
-        core.getInput('template_issues_summary') || Templates.issuesSummary,
-      templateIssuesStatistics:
-        core.getInput('template_issues_statistics') ||
+      templateIssuesTitle: input(
+        'template_issues_title',
+        Templates.issuesTitle,
+      ),
+      templateIssuesSummary: input(
+        'template_issues_summary',
+        Templates.issuesSummary,
+      ),
+      templateIssuesStatistics: input(
+        'template_issues_statistics',
         Templates.issuesStatistics,
+      ),
 
-      templateOpenIssuesTitle:
-        core.getInput('template_open_issues_title') ||
+      templateOpenIssuesTitle: input(
+        'template_open_issues_title',
         Templates.openIssuesTitle,
-      templateOpenIssuesItem:
-        core.getInput('template_open_issues_item') || Templates.openIssuesItem,
+      ),
+      templateOpenIssuesItem: input(
+        'template_open_issues_item',
+        Templates.openIssuesItem,
+      ),
 
-      templateClosedIssuesTitle:
-        core.getInput('template_closed_issues_title') ||
+      templateClosedIssuesTitle: input(
+        'template_closed_issues_title',
         Templates.closedIssuesTitle,
-      templateClosedIssuesItem:
-        core.getInput('template_closed_issues_item') ||
+      ),
+      templateClosedIssuesItem: input(
+        'template_closed_issues_item',
         Templates.closedIssuesItem,
+      ),
 
-      templateLikedIssuesTitle:
-        core.getInput('template_liked_issues_title') ||
+      templateLikedIssuesTitle: input(
+        'template_liked_issues_title',
         Templates.likedIssuesTitle,
-      templateLikedIssuesReaction:
-        core.getInput('template_liked_issues_reaction') ||
+      ),
+      templateLikedIssuesReaction: input(
+        'template_liked_issues_reaction',
         Templates.likedIssuesReaction,
-      templateLikedIssuesItem:
-        core.getInput('template_liked_issues_item') ||
+      ),
+      templateLikedIssuesItem: input(
+        'template_liked_issues_item',
         Templates.likedIssuesItem,
+      ),
 
-      templateHotIssuesTitle:
-        core.getInput('template_hot_issues_title') ||
-        Templates.likedIssuesTitle,
-      templateHotIssuesItem:
-        core.getInput('template_hot_issues_item') || Templates.likedIssuesItem,
+      templateHotIssuesTitle: input(
+        'template_hot_issues_title',
+        Templates.hotIssuesTitle,
+      ),
+      templateHotIssuesItem: input(
+        'template_hot_issues_item',
+        Templates.hotIssuesItem,
+      ),
     }
   }
 }
