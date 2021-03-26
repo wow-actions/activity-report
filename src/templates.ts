@@ -149,7 +149,7 @@ export namespace Templates {
     <% } else if (commits.length === 1) { %>
       Last week there was 1 commit.
     <% } else { %>
-      Last week there were  <%= commits.length %> commits.
+      Last week there were <%= commits.length %> commits.
     <% }  %>
   `
   export const commitsItem = `:hammer_and_wrench: <%= commitLink %> by <%= userLink%>`
@@ -163,14 +163,36 @@ export namespace Templates {
     <% } else if (contributors.length === 1) { %>
       Last week there was 1 contributor.
     <% } else { %>
-      Last week there were  <%= contributors.length %> contributors.
+      Last week there were <%= contributors.length %> contributors.
     <% }  %>
   `
   export const contributorsItem = `:bust_in_silhouette: <%= userLink%>`
 
   // STARGAZERS
   // ----------
+  export const stargazersTitle = `# STARGAZERS`
+  export const stargazersSummary = `
+    <% if (stargazers.length === 0) { %>
+      Last week there were no stargazers.
+    <% } else if (stargazers.length === 1) { %>
+      You are the star! :star2:
+    <% } else { %>
+      You all are the stars! :star2:
+    <% }  %>
+  `
+  export const stargazersItem = `:star: <%= userLink%>`
 
   // RELEASES
   // --------
+  export const releasesTitle = `# RELEASES`
+  export const releasesSummary = `
+    <% if (releases.length === 0) { %>
+      Last week there were no releases.
+    <% } else if (releases.length === 1) { %>
+      Last week there was 1 release.
+    <% } else { %>
+      Last week there were <%= releases.length %> releases.
+    <% }  %>
+  `
+  export const releasesItem = `:star: <%= userLink%>`
 }

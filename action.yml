@@ -158,6 +158,26 @@ inputs:
     description: Template to render contributors item.
     required: false
 
+  template_stargazers_title:
+    description: Template to render stargazers title.
+    required: false
+  template_stargazers_summary:
+    description: Template to render stargazers summary.
+    required: false
+  template_stargazers_item:
+    description: Template to render stargazers item.
+    required: false
+
+  template_releases_title:
+    description: Template to render releases title.
+    required: false
+  template_releases_summary:
+    description: Template to render releases summary.
+    required: false
+  template_releases_item:
+    description: Template to render releases item.
+    required: false
+
 runs:
   using: node12
   main: dist/index.js

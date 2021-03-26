@@ -1,7 +1,8 @@
 import moment from 'moment'
 import { context } from '@actions/github'
+import { Util } from './util'
 import { octokit } from './octokit'
-import { Await } from './types'
+import { Await, Config, Timespan } from './types'
 
 export namespace Releases {
   export async function list() {
@@ -14,35 +15,83 @@ export namespace Releases {
 
   type ReleaseList = Await<ReturnType<typeof list>>
 
-  const name = (item: ReleaseList[0]) =>
-    item.tag_name.replace(/\n/g, ' ') +
-    (item.name != null ? ` ${item.name.replace(/\n/g, ' ')}` : '')
-
   export function render(
-    releases: ReleaseList = [],
-    headDate: string,
-    tailDate: string,
+    releaseList: ReleaseList = [],
+    timespan: Timespan,
+    config: Config,
   ) {
-    let result = '# RELEASES\n'
-    const data = releases.filter((item) =>
-      moment(item.published_at).isBetween(tailDate, headDate),
+    const releases = releaseList.filter((item) =>
+      moment(item.published_at).isBetween(
+        timespan.fromDateString,
+        timespan.toDateString,
+      ),
     )
 
-    const total = data.length
-    if (total === 0) {
-      result += 'Last week there were no releases.\n'
-    } else {
-      if (total === 1) {
-        result += `Last week there was ${total} release.\n`
-      } else {
-        result += `Last week there were ${total} releases.\n`
-      }
+    const result: string[] = []
+    result.push(
+      renderTitle(timespan, config, releases),
+      renderSummary(timespan, config, releases),
+      releases
+        .map((release) => renderItem(timespan, config, release, releases))
+        .join('\n'),
+    )
 
-      data.forEach((item) => {
-        result += `:rocket: [${name(item)}](${item.html_url})\n`
-      })
+    return result.join('\n')
+  }
+
+  function releaseName(release: ReleaseList[0]) {
+    let result = release.tag_name.replace(/\n/g, ' ')
+    if (release.tag_name !== release.name && release.name) {
+      result += ` ${release.name.replace(/\n/g, ' ')}`
     }
-
     return result
+  }
+
+  function renderTitle(
+    timespan: Timespan,
+    config: Config,
+    releases: ReleaseList,
+  ) {
+    return Util.render(
+      config.templateReleasesTitle,
+      timespan,
+      {
+        releases,
+      },
+      true,
+    )
+  }
+
+  function renderSummary(
+    timespan: Timespan,
+    config: Config,
+    releases: ReleaseList,
+  ) {
+    return Util.render(
+      config.templateReleasesSummary,
+      timespan,
+      {
+        releases,
+      },
+      true,
+    )
+  }
+
+  function renderItem(
+    timespan: Timespan,
+    config: Config,
+    release: ReleaseList[0],
+    releases: ReleaseList,
+  ) {
+    return Util.render(
+      config.templateReleasesItem,
+      timespan,
+      {
+        release,
+        releases,
+        releaseName: releaseName(release),
+      },
+      true,
+    )
   }
 }

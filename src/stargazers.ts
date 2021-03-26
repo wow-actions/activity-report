@@ -1,7 +1,8 @@
 import moment from 'moment'
 import { context } from '@actions/github'
+import { Util } from './util'
 import { octokit } from './octokit'
-import { Await } from './types'
+import { Await, Config, Timespan } from './types'
 
 export namespace Stargazers {
   export async function list() {
@@ -18,36 +19,76 @@ export namespace Stargazers {
   type StargazerList = Await<ReturnType<typeof list>>
 
   export function render(
-    stargazers: StargazerList = [],
-    headDate: string,
-    tailDate: string,
+    stargazerList: StargazerList = [],
+    timespan: Timespan,
+    config: Config,
   ) {
-    let result = '# STARGAZERS\n'
-    const data = stargazers.filter(
+    const stargazers = stargazerList.filter(
       (item) =>
-        item != null && moment(item.starred_at).isBetween(tailDate, headDate),
+        item != null &&
+        moment(item.starred_at).isBetween(
+          timespan.fromDateString,
+          timespan.toDateString,
+        ),
     )
 
-    const total = data.length
-    if (total === 0) {
-      result += 'Last week there were no stargazers.\n'
-    } else {
-      if (total === 1) {
-        result += `Last week there was ${total} stargazer.\n`
-      } else {
-        result += `Last week there were ${total} stargazers.\n`
-      }
+    const result: string[] = []
+    result.push(
+      renderTitle(timespan, config, stargazers),
+      renderSummary(timespan, config, stargazers),
+      stargazers
+        .map((stargazer) => renderItem(timespan, config, stargazer, stargazers))
+        .join('\n'),
+    )
 
-      data.forEach((item) => {
-        result += `:star: [${item!.login}](${item!.html_url})\n`
-      })
+    return result.join('\n')
+  }
 
-      if (total === 1) {
-        result += 'You are the star! :star2:\n'
-      } else {
-        result += 'You all are the stars! :star2:\n'
-      }
-    }
-    return result
+  function renderTitle(
+    timespan: Timespan,
+    config: Config,
+    stargazers: StargazerList,
+  ) {
+    return Util.render(
+      config.templateStargazersTitle,
+      timespan,
+      {
+        stargazers,
+      },
+      true,
+    )
+  }
+
+  function renderSummary(
+    timespan: Timespan,
+    config: Config,
+    stargazers: StargazerList,
+  ) {
+    return Util.render(
+      config.templateStargazersSummary,
+      timespan,
+      {
+        stargazers,
+      },
+      true,
+    )
+  }
+
+  function renderItem(
+    timespan: Timespan,
+    config: Config,
+    stargazer: StargazerList[0],
+    stargazers: StargazerList,
+  ) {
+    return Util.render(
+      config.templateStargazersItem,
+      timespan,
+      {
+        stargazer,
+        stargazers,
+        userLink: `[${stargazer!.login}](${stargazer!.html_url})`,
+      },
+      true,
+    )
   }
 }

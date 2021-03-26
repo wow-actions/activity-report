@@ -310,9 +310,33 @@ export namespace Util {
 
       // STARGAZERS
       // ----------
+      templateStargazersTitle: input(
+        'template_stargazers_title',
+        Templates.stargazersTitle,
+      ),
+      templateStargazersSummary: input(
+        'template_stargazers_summary',
+        Templates.stargazersSummary,
+      ),
+      templateStargazersItem: input(
+        'template_stargazers_item',
+        Templates.stargazersItem,
+      ),
 
       // RELEASES
       // --------
+      templateReleasesTitle: input(
+        'template_releases_title',
+        Templates.releasesTitle,
+      ),
+      templateReleasesSummary: input(
+        'template_releases_summary',
+        Templates.releasesSummary,
+      ),
+      templateReleasesItem: input(
+        'template_releases_item',
+        Templates.releasesItem,
+      ),
     }
   }
 }

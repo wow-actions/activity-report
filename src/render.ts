@@ -1,4 +1,3 @@
-import * as core from '@actions/core'
 import { Util } from './util'
 import { Config, Timespan } from './types'
 import { Issues } from './issues'
@@ -26,11 +25,8 @@ export namespace Renderer {
     let commitsString: string | undefined
     let releasesString: string | undefined
 
-    const tailDate = timespan.fromDateString
-    const headDate = timespan.toDateString
-
     if (config.publishIssues) {
-      const issues = await Issues.list(tailDate)
+      const issues = await Issues.list(timespan.fromDateString)
       const reactions =
         config.publishTopLikedIssues > 0
           ? await Reactions.map(issues.map((issue) => issue.number))
@@ -45,7 +41,7 @@ export namespace Renderer {
     }
 
     if (config.publishCommits || config.publishCommits) {
-      const commits = await Commits.list(tailDate)
+      const commits = await Commits.list(timespan.fromDateString)
       if (config.publishCommits) {
         commitsString = Commits.render(commits, timespan, config)
       }
@@ -60,12 +56,12 @@ export namespace Renderer {
 
     if (config.publishStargazers) {
       const stargazers = await Stargazers.list()
-      stargazersString = Stargazers.render(stargazers, headDate, tailDate)
+      stargazersString = Stargazers.render(stargazers, timespan, config)
     }
 
     if (config.publishReleases) {
       const releases = await Releases.list()
-      releasesString = Releases.render(releases, headDate, tailDate)
+      releasesString = Releases.render(releases, timespan, config)
     }
 
     const arr = [
