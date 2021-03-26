@@ -194,5 +194,5 @@ export namespace Templates {
       Last week there were <%= releases.length %> releases.
     <% }  %>
   `
-  export const releasesItem = `:star: <%= userLink%>`
+  export const releasesItem = `:rocket: [<%= releaseName %>](<%= release.html_url %>)`
 }
