@@ -1,15 +1,16 @@
 import moment from 'moment'
 import { context } from '@actions/github'
 import { octokit } from './octokit'
-import { Await, Config } from './types'
+import { Await, Config, Timespan } from './types'
 import { Reactions } from './reactions'
+import { Util } from './util'
 
 export namespace Issues {
-  export async function list(tailDate: string) {
+  export async function list(fromDate: string) {
     const issues = await octokit.paginate(octokit.issues.listForRepo, {
       ...context.repo,
       state: 'all',
-      since: tailDate,
+      since: fromDate,
       per_page: 100,
     })
     return issues
@@ -41,118 +42,87 @@ export namespace Issues {
     return res
   }
 
-  type IssueList = Await<ReturnType<typeof list>>
-
-  const link = (issue: IssueList[0]) =>
-    `#${issue.number} [${issue.title.replace(/\n/g, ' ')}](${issue.html_url})`
-
-  const user = (issue: IssueList[0]) =>
-    `[${issue.user!.login}](${issue.user!.html_url})`
-
   export function render(
-    issues: IssueList = [],
+    issueList: IssueList = [],
     reactions: { [issue: number]: Reactions.ReactionsList },
-    headDate: string,
-    tailDate: string,
+    timespan: Timespan,
     config: Config,
   ) {
-    let result = '# ISSUES\n'
+    const fromDate = timespan.toDateString
+    const toDate = timespan.fromDateString
+    let result = `${renderTitle(timespan, config)}\n`
 
-    const data = issues.filter(
+    const issues = issueList.filter(
       (issue) =>
-        moment(issue.created_at).isBetween(tailDate, headDate) &&
+        moment(issue.created_at).isBetween(toDate, fromDate) &&
         issue.user!.login !== 'weekly-digest[bot]',
     )
 
-    const total = data.length
-    if (total === 0) {
-      result += 'Last week, no issues were created.\n'
-    } else {
-      if (total === 1) {
-        result += `Last week ${total} issue was created.\n`
-      } else {
-        result += `Last week ${total} issues were created.\n`
-      }
+    result += `${renderSummary(timespan, config, issues)}\n`
 
-      const openIssues = data.filter((issue) => issue.state === 'open')
-      const closedIssues = data.filter((issue) => issue.state === 'closed')
-
-      if (total === 1 && openIssues.length === 1) {
-        result += 'It is still open.\n'
-      } else if (total === openIssues.length && openIssues.length > 1) {
-        result += 'They are still open.\n'
-      } else if (total === 1 && closedIssues.length === 1) {
-        result += 'It is closed now.\n'
-      } else if (total === closedIssues.length && closedIssues.length > 1) {
-        result += 'They are all have been closed.\n'
-      } else if (total > 0) {
-        result += `Of these, `
-
-        if (closedIssues.length > 0) {
-          if (closedIssues.length === 1) {
-            result += `${closedIssues.length} issue has been closed`
-          } else {
-            result += `${closedIssues.length} issues have been closed`
-          }
-
-          if (openIssues.length > 0) {
-            result += ' and '
-          }
-        }
-
-        if (openIssues.length > 0) {
-          if (openIssues.length === 1) {
-            result += `${openIssues.length} issue is still open`
-          } else {
-            result += `${openIssues.length} issues are still open`
-          }
-        }
-
-        result += '.\n'
-      }
+    if (issues.length > 0) {
+      const openIssues = issues.filter((issue) => issue.state === 'open')
+      const closedIssues = issues.filter((issue) => issue.state === 'closed')
+      result += `${renderStatistics(
+        timespan,
+        config,
+        issues,
+        openIssues,
+        closedIssues,
+      )}\n`
 
       if (openIssues.length > 0) {
-        const temp: string[] = ['## OPEN ISSUES']
+        const temp: string[] = [
+          renderOpenIssuesTitle(timespan, config, openIssues, issues),
+        ]
+
         openIssues.forEach((issue) => {
-          temp.push(`:green_heart: ${link(issue)}, by ${user(issue)}`)
+          temp.push(
+            renderOpenIssuesItem(timespan, config, issue, openIssues, issues),
+          )
         })
+
         result += temp.join('\n')
       }
 
       if (closedIssues.length > 0) {
-        const temp: string[] = ['## CLOSED ISSUES']
+        const temp: string[] = [
+          renderClosedIssuesTitle(timespan, config, closedIssues, issues),
+        ]
         closedIssues.forEach((issue) => {
-          temp.push(`:heart: ${link(issue)}, by ${user(issue)}`)
+          temp.push(
+            renderClosedIssuesItem(
+              timespan,
+              config,
+              issue,
+              closedIssues,
+              issues,
+            ),
+          )
         })
         result += temp.join('\n')
       }
 
       // For Liked issue
       // ---------------
-      if (config.topLikedIssues > 0) {
+      if (config.publishTopLikedIssues > 0) {
         const likeMap: { [issue: number]: number } = {}
         const likeTypes = ['+1', 'laugh', 'hooray', 'heart', 'rocket']
 
-        data.forEach((issue) => {
+        issues.forEach((issue) => {
           likeMap[issue.number] = reactions[issue.number].reduce(
             (memo, { content }) => memo + (likeTypes.includes(content) ? 1 : 0),
             0,
           )
         })
 
-        const likedIssues = data
+        const likedIssues = issues
           .filter((issue) => likeMap[issue.number] > 0)
           .sort((a, b) => likeMap[b.number] - likeMap[a.number])
-          .slice(0, config.topLikedIssues)
+          .slice(0, config.publishTopLikedIssues)
 
         if (likedIssues.length > 0) {
-          const temp: string[] = [
-            likedIssues.length > 1
-              ? `## TOP ${likedIssues.length} LIKED ISSUES`
-              : '## MOST LIKED ISSUE',
-          ]
-
-          const details = (issue: IssueList[0]) => {
+          const detail = (issue: IssueList[0]) => {
             let plus = 0
             let laugh = 0
             let hooray = 0
@@ -196,58 +166,168 @@ export namespace Issues {
             return result.join(', ')
           }
 
-          if (likedIssues.length === 1) {
-            const issue = likedIssues[0]
-            temp.push(`:+1: ${link(issue)}, by ${user(issue)}`)
-            temp.push(`It received ${details(issue)}.`)
-          } else {
-            likedIssues.forEach((issue) => {
-              temp.push(
-                `:+1: ${link(issue)}, by ${user(issue)}, received ${details(
-                  issue,
-                )}.`,
-              )
-            })
-          }
-
-          result += temp.join('\n')
+          const details = likedIssues.map((issue) => detail(issue))
+          result += [
+            renderLikedIssuesTitle(timespan, config, likedIssues, issues),
+            renderLikedIssuesDetail(
+              timespan,
+              config,
+              details,
+              likedIssues,
+              issues,
+            ),
+          ].join('\n')
         }
       }
 
       // For Hot issue
       // ---------------
-      if (config.topHotIssues > 0) {
-        const hotIssues = data
+      if (config.publishTopHotIssues > 0) {
+        const hotIssues = issues
           .filter((item) => item.comments > 0)
           .sort((a, b) => b.comments - a.comments)
-          .slice(0, config.topHotIssues)
+          .slice(0, config.publishTopHotIssues)
 
         if (hotIssues.length > 0) {
-          const temp: string[] = [
-            hotIssues.length > 1
-              ? `## TOP ${hotIssues.length} HOT ISSUES`
-              : '## HOTTEST ISSUE',
-          ]
-
-          if (hotIssues.length === 1) {
-            const issue = hotIssues[0]
-            temp.push(`:speaker: ${link(issue)}, by ${user(issue)}`)
-            temp.push(`It received ${issue.comments} comments.`)
-          } else {
-            hotIssues.forEach((issue) => {
-              temp.push(
-                `:speaker: ${link(issue)}, by ${user(issue)}, received ${
-                  issue.comments
-                } comments.`,
-              )
-            })
-          }
-
-          result += temp.join('\n')
+          result += [
+            renderHotIssuesTitle(timespan, config, hotIssues, issues),
+            renderHotIssuesDetail(timespan, config, hotIssues, issues),
+          ].join('\n')
         }
       }
     }
 
     return result
+  }
+
+  type IssueList = Await<ReturnType<typeof list>>
+
+  function renderTitle(timespan: Timespan, config: Config) {
+    return Util.render(config.templateIssuesTitle, timespan)
+  }
+
+  function renderSummary(
+    timespan: Timespan,
+    config: Config,
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateIssuesSummary, timespan, { issues })
+  }
+
+  function renderStatistics(
+    timespan: Timespan,
+    config: Config,
+    issues: IssueList,
+    openIssues: IssueList,
+    closedIssues: IssueList,
+  ) {
+    return Util.render(config.templateIssuesStatistics, timespan, {
+      issues,
+      openIssues,
+      closedIssues,
+    })
+  }
+
+  function renderOpenIssuesTitle(
+    timespan: Timespan,
+    config: Config,
+    openIssues: IssueList,
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateOpenIssuesTitle, timespan, {
+      issues,
+      openIssues,
+    })
+  }
+
+  function renderOpenIssuesItem(
+    timespan: Timespan,
+    config: Config,
+    issue: IssueList[0],
+    openIssues: IssueList,
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateOpenIssuesItem, timespan, {
+      issue,
+      issues,
+      openIssues,
+    })
+  }
+
+  function renderClosedIssuesTitle(
+    timespan: Timespan,
+    config: Config,
+    closedIssues: IssueList,
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateClosedIssuesTitle, timespan, {
+      issues,
+      closedIssues,
+    })
+  }
+
+  function renderClosedIssuesItem(
+    timespan: Timespan,
+    config: Config,
+    issue: IssueList[0],
+    closedIssues: IssueList,
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateClosedIssuesItem, timespan, {
+      issue,
+      issues,
+      closedIssues,
+    })
+  }
+
+  function renderLikedIssuesTitle(
+    timespan: Timespan,
+    config: Config,
+    likedIssues: IssueList,
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateLikedIssuesTitle, timespan, {
+      issues,
+      likedIssues,
+    })
+  }
+
+  function renderLikedIssuesDetail(
+    timespan: Timespan,
+    config: Config,
+    details: string[],
+    likedIssues: IssueList,
+
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateLikedIssuesDetail, timespan, {
+      issues,
+      details,
+      likedIssues,
+    })
+  }
+
+  function renderHotIssuesTitle(
+    timespan: Timespan,
+    config: Config,
+    hotIssues: IssueList,
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateHotIssuesTitle, timespan, {
+      issues,
+      hotIssues,
+    })
+  }
+
+  function renderHotIssuesDetail(
+    timespan: Timespan,
+    config: Config,
+    hotIssues: IssueList,
+    issues: IssueList,
+  ) {
+    return Util.render(config.templateHotIssuesDetail, timespan, {
+      issues,
+      hotIssues,
+    })
   }
 }

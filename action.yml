@@ -12,45 +12,91 @@ inputs:
     description: How many days before now to collect metadata.
     default: 7
 
-  issues:
+  publish_issues:
     required: false
     description: Should publish issues or not.
     default: true
-
-  top_liked_issues:
+  publish_top_liked_issues:
     required: false
     description: Should publish top liked issues with most positive reactions or not, or the count of top liked issues to publish.
     default: 3
-
-  top_hot_issues:
+  publish_top_hot_issues:
     required: false
     description: Should publish top hot issues with most comments or not, or the count of top hot issues to publish.
     default: 3
-
-  pulls:
+  publish_pull_requests:
     required: false
     description: Should publish pull requests or not.
     default: true
-
-  contributors:
+  publish_contributors:
     required: false
     description: Should publish contributors or not.
     default: true
-
-  stargazers:
+  publish_stargazers:
     required: false
     description: Should publish stargazers or not.
     default: true
-
-  commits:
+  publish_commits:
     required: false
     description: Should publish commits or not.
     default: true
-
-  releases:
+  publish_releases:
     required: false
     description: Should publish releases or not.
     default: true
+
+  add_labels:
+    required: false
+    description: Comma separated labels to be add to the issue create by this action.
+    default: 'weekly-digest'
+
+  template_title:
+    description: Template to render title.
+    required: false
+  template_header:
+    description: Template to render header.
+    required: false
+  template_footer:
+    description: Template to render footer.
+    required: false
+
+  template_issues_title:
+    description: Template to render issues title.
+    required: false
+  template_issues_summary:
+    description: Template to render issues summary.
+    required: false
+  template_issues_statistics:
+    description: Template to render issues statistics.
+    required: false
+
+  template_open_issues_title:
+    description: Template to render open issues title.
+    required: false
+  template_open_issues_item:
+    description: Template to render open issues item.
+    required: false
+
+  template_closed_issues_title:
+    description: Template to render closed issues title.
+    required: false
+  template_closed_issues_item:
+    description: Template to render closed issues item.
+    required: false
+
+  template_liked_issues_title:
+    description: Template to render liked issues title.
+    required: false
+  template_liked_issues_detail:
+    description: Template to render liked issues detail.
+    required: false
+
+  template_hot_issues_title:
+    description: Template to render hot issues title.
+    required: false
+  template_hot_issues_detail:
+    description: Template to render hot issues detail.
+    required: false
 
 runs:
   using: node12

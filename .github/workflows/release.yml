@@ -9,5 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: bubkoo/release-github-action@v1
+        if: ${{ !env.ACT }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
