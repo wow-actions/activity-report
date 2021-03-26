@@ -68,56 +68,47 @@ export namespace Templates {
   export const closedIssuesItem = `:heart: ${issueLink} by ${issueUser}`
 
   export const likedIssuesTitle = `
-  <% if (likedIssues.length > 1) { %>
-    ## TOP <%= likedIssues.length %> MOST LIKED ISSUES
-  <% } else { %>
-    ## MOST LIKED ISSUE
-  <% } %>
+    <% if (likedIssues.length > 1) { %>
+      ## TOP <%= likedIssues.length %> MOST LIKED ISSUES
+    <% } else { %>
+      ## MOST LIKED ISSUE
+    <% } %>
   `
-  export const likedIssuesDetail = `
-  <% if (likedIssues.length === 1) { %>
-    <% var issue = likedIssues[0] %>
 
-:+1: ${issueLink} by ${issueUser}
+  export const likedIssuesReaction = `
+    <% var result = [] %>
+    <% if (reactions['+1'] > 0) { %>
+      <% result.push(':+1: x' + reactions['+1'])  %>
+    <% } else if(reactions.laugh > 0) { %>
+      <% result.push(':smile: x' + reactions.laugh)  %>
+    <% } else if(reactions.hooray > 0) { %>
+      <% result.push(':tada: x' + reactions.hooray)  %>
+    <% } else if(reactions.heart > 0) { %>
+      <% result.push(':heart: x' + reactions.heart)  %>
+    <% } else if(reactions.rocket > 0) { %>
+      <% result.push(':rocket: x' + reactions.rocket)  %>
+    <% }%>
+    <%= result.join(', ') %>
+  `
 
-It received <%= details[0] %>.
-
-  <% } else { %>
+  export const likedIssuesItem = `
     <% for (var i = 0, l = likedIssues.length; i < l; i+=1) { %>
       <% var issue = likedIssues[i] %>
-
-:speaker: ${issueLink} by ${issueUser}, received <%= details[i] %>.
-
+      :+1: ${issueLink} by ${issueUser}, received <%= reactions %>.
     <% } %>
-  <% } %>
   `
 
   export const hotIssuesTitle = `
     <% if (hotIssues.length > 1) { %>
-
       ## TOP <%= hotIssues.length %> MOST HOT ISSUES
-
     <% } else { %>
-
       ## MOST HOTT ISSUE
-
     <% } %>
   `
-  export const hotIssuesDetail = `
-  <% if (hotIssues.length === 1) { %>
-    <% var issue = hotIssues[0] %>
-
-:speaker: ${issueLink} by ${issueUser}
-
-It received <%= issue.comments %> comments.
-
-  <% } else { %>
+  export const hotIssuesItem = `
     <% for (var i = 0, l = hotIssues.length; i < l; i+=1) { %>
       <% var issue = hotIssues[i] %>
-
-:speaker: ${issueLink} by ${issueUser}, received <%= issue.comments %> comments.
-
+        :speaker: ${issueLink} by ${issueUser}, received <%= issue.comments %> comments.
     <% } %>
-  <% } %>
   `
 }

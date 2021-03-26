@@ -87,15 +87,18 @@ inputs:
   template_liked_issues_title:
     description: Template to render liked issues title.
     required: false
-  template_liked_issues_detail:
-    description: Template to render liked issues detail.
+  template_liked_issues_item:
+    description: Template to render liked issues item.
+    required: false
+  template_liked_issues_reaction:
+    description: Template to render liked issues reaction.
     required: false
 
   template_hot_issues_title:
     description: Template to render hot issues title.
     required: false
-  template_hot_issues_detail:
-    description: Template to render hot issues detail.
+  template_hot_issues_item:
+    description: Template to render hot issues item.
     required: false
 
 runs:

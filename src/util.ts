@@ -132,19 +132,20 @@ export namespace Util {
     template: string,
     timespan?: Timespan,
     data: any = {},
+    cleanBreak?: boolean,
   ) {
     const raw = template.trim()
     const erb = raw.indexOf('<%') !== -1
 
     const compiled = compile(raw, erb ? {} : { interpolate: /\{\{(.+?)\}\}/g })
 
-    return compiled({
+    const content = compiled({
       ...context.repo,
       ...timespan,
       ...data,
       context,
     }).trim()
-    // .replace(/\n/g, ' ')
+    return cleanBreak ? content.replace(/\n/g, ' ') : content
   }
 
   export function getInputs() {
@@ -193,16 +194,18 @@ export namespace Util {
       templateLikedIssuesTitle:
         core.getInput('template_liked_issues_title') ||
         Templates.likedIssuesTitle,
-      templateLikedIssuesDetail:
-        core.getInput('template_liked_issues_detail') ||
-        Templates.likedIssuesDetail,
+      templateLikedIssuesReaction:
+        core.getInput('template_liked_issues_reaction') ||
+        Templates.likedIssuesReaction,
+      templateLikedIssuesItem:
+        core.getInput('template_liked_issues_item') ||
+        Templates.likedIssuesItem,
 
       templateHotIssuesTitle:
         core.getInput('template_hot_issues_title') ||
         Templates.likedIssuesTitle,
-      templateHotIssuesDetail:
-        core.getInput('template_hot_issues_detail') ||
-        Templates.likedIssuesDetail,
+      templateHotIssuesItem:
+        core.getInput('template_hot_issues_item') || Templates.likedIssuesItem,
     }
   }
 }

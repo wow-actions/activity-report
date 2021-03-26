@@ -120,12 +120,13 @@ export namespace Issues {
           .slice(0, config.publishTopLikedIssues)
 
         if (likedIssues.length > 0) {
-          const detail = (issue: IssueList[0]) => {
+          const reactionMap = (issue: IssueList[0]) => {
             let plus = 0
             let laugh = 0
             let hooray = 0
             let heart = 0
             let rocket = 0
+
             reactions[issue.number].forEach(({ content }) => {
               if (content === '+1') {
                 plus += 1
@@ -140,41 +141,53 @@ export namespace Issues {
               }
             })
 
-            const result: string[] = []
-            if (plus > 0) {
-              result.push(`:+1: x${plus}`)
+            return {
+              laugh,
+              hooray,
+              heart,
+              rocket,
+              '+1': plus,
             }
 
-            if (laugh > 0) {
-              result.push(`:smile: x${laugh}`)
-            }
+            // const result: string[] = []
+            // if (plus > 0) {
+            //   result.push(`:+1: x${plus}`)
+            // }
 
-            if (hooray > 0) {
-              result.push(`:tada: x${hooray}`)
-            }
+            // if (laugh > 0) {
+            //   result.push(`:smile: x${laugh}`)
+            // }
 
-            if (heart > 0) {
-              result.push(`:heart: x${heart}`)
-            }
+            // if (hooray > 0) {
+            //   result.push(`:tada: x${hooray}`)
+            // }
 
-            if (rocket > 0) {
-              result.push(`:rocket: x${rocket}`)
-            }
+            // if (heart > 0) {
+            //   result.push(`:heart: x${heart}`)
+            // }
 
-            return result.join(', ')
+            // if (rocket > 0) {
+            //   result.push(`:rocket: x${rocket}`)
+            // }
+
+            // return result.join(', ')
           }
 
-          const details = likedIssues.map((issue) => detail(issue))
           result.push(
             [
               renderLikedIssuesTitle(timespan, config, likedIssues, issues),
-              renderLikedIssuesDetail(
-                timespan,
-                config,
-                details,
-                likedIssues,
-                issues,
-              ),
+              likedIssues
+                .map((issue) =>
+                  renderLikedIssuesItem(
+                    timespan,
+                    config,
+                    issue,
+                    reactionMap(issue),
+                    likedIssues,
+                    issues,
+                  ),
+                )
+                .join('\n'),
             ].join('\n'),
           )
         }
@@ -192,7 +205,17 @@ export namespace Issues {
           result.push(
             [
               renderHotIssuesTitle(timespan, config, hotIssues, issues),
-              renderHotIssuesDetail(timespan, config, hotIssues, issues),
+              hotIssues
+                .map((issue) =>
+                  renderHotIssuesItem(
+                    timespan,
+                    config,
+                    issue,
+                    hotIssues,
+                    issues,
+                  ),
+                )
+                .join('\n'),
             ].join('\n'),
           )
         }
@@ -205,7 +228,7 @@ export namespace Issues {
   type IssueList = Await<ReturnType<typeof list>>
 
   function renderTitle(timespan: Timespan, config: Config) {
-    return Util.render(config.templateIssuesTitle, timespan)
+    return Util.render(config.templateIssuesTitle, timespan, {}, true)
   }
 
   function renderSummary(
@@ -223,11 +246,16 @@ export namespace Issues {
     openIssues: IssueList,
     closedIssues: IssueList,
   ) {
-    return Util.render(config.templateIssuesStatistics, timespan, {
-      issues,
-      openIssues,
-      closedIssues,
-    }).replace(/\n/g, ' ')
+    return Util.render(
+      config.templateIssuesStatistics,
+      timespan,
+      {
+        issues,
+        openIssues,
+        closedIssues,
+      },
+      true,
+    )
   }
 
   function renderOpenIssuesTitle(
@@ -236,10 +264,15 @@ export namespace Issues {
     openIssues: IssueList,
     issues: IssueList,
   ) {
-    return Util.render(config.templateOpenIssuesTitle, timespan, {
-      issues,
-      openIssues,
-    })
+    return Util.render(
+      config.templateOpenIssuesTitle,
+      timespan,
+      {
+        issues,
+        openIssues,
+      },
+      true,
+    )
   }
 
   function renderOpenIssuesItem(
@@ -262,10 +295,15 @@ export namespace Issues {
     closedIssues: IssueList,
     issues: IssueList,
   ) {
-    return Util.render(config.templateClosedIssuesTitle, timespan, {
-      issues,
-      closedIssues,
-    })
+    return Util.render(
+      config.templateClosedIssuesTitle,
+      timespan,
+      {
+        issues,
+        closedIssues,
+      },
+      true,
+    )
   }
 
   function renderClosedIssuesItem(
@@ -288,25 +326,64 @@ export namespace Issues {
     likedIssues: IssueList,
     issues: IssueList,
   ) {
-    return Util.render(config.templateLikedIssuesTitle, timespan, {
-      issues,
-      likedIssues,
-    })
+    return Util.render(
+      config.templateLikedIssuesTitle,
+      timespan,
+      {
+        issues,
+        likedIssues,
+      },
+      true,
+    )
   }
 
-  function renderLikedIssuesDetail(
+  function renderLikedIssuesReaction(
     timespan: Timespan,
     config: Config,
-    details: string[],
+    issue: IssueList[0],
+    reactions: Record<string, number>,
     likedIssues: IssueList,
-
     issues: IssueList,
   ) {
-    return Util.render(config.templateLikedIssuesDetail, timespan, {
-      issues,
-      details,
-      likedIssues,
-    })
+    return Util.render(
+      config.templateLikedIssuesReaction,
+      timespan,
+      {
+        issue,
+        issues,
+        reactions,
+        likedIssues,
+      },
+      true,
+    )
+  }
+
+  function renderLikedIssuesItem(
+    timespan: Timespan,
+    config: Config,
+    issue: IssueList[0],
+    reactions: Record<string, number>,
+    likedIssues: IssueList,
+    issues: IssueList,
+  ) {
+    return Util.render(
+      config.templateLikedIssuesItem,
+      timespan,
+      {
+        issue,
+        issues,
+        likedIssues,
+        reactions: renderLikedIssuesReaction(
+          timespan,
+          config,
+          issue,
+          reactions,
+          likedIssues,
+          issues,
+        ),
+      },
+      true,
+    )
   }
 
   function renderHotIssuesTitle(
@@ -315,21 +392,33 @@ export namespace Issues {
     hotIssues: IssueList,
     issues: IssueList,
   ) {
-    return Util.render(config.templateHotIssuesTitle, timespan, {
-      issues,
-      hotIssues,
-    })
+    return Util.render(
+      config.templateHotIssuesTitle,
+      timespan,
+      {
+        issues,
+        hotIssues,
+      },
+      true,
+    )
   }
 
-  function renderHotIssuesDetail(
+  function renderHotIssuesItem(
     timespan: Timespan,
     config: Config,
+    issue: IssueList[0],
     hotIssues: IssueList,
     issues: IssueList,
   ) {
-    return Util.render(config.templateHotIssuesDetail, timespan, {
-      issues,
-      hotIssues,
-    })
+    return Util.render(
+      config.templateHotIssuesItem,
+      timespan,
+      {
+        issue,
+        issues,
+        hotIssues,
+      },
+      true,
+    )
   }
 }
