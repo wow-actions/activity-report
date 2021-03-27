@@ -80,8 +80,8 @@ export namespace Renderer {
       }
     })
 
-    body += '\n'
-    body += renderFooter(timespan, config)
+    body += '\n\n'
+    body += `${renderFooter(timespan, config)}\n\n`
     body +=
       '> Your [**Activity Report**](https://github.com/marketplace/actions/activity-report) bot. :calendar:\n'
     return body

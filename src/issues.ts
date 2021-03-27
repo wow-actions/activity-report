@@ -215,10 +215,7 @@ export namespace Issues {
   const anchor = '<!-- activity-report-anchor -->'
 
   function renderHiddenArea(timespan: Timespan) {
-    return `
-    <!-- ${anchor} -->
-    <!-- ${timespan.fromDateString} - ${timespan.toDateString}  -->
-    `
+    return `${anchor}\n<!-- ${timespan.fromDateString} - ${timespan.toDateString}  -->`
   }
 
   function checkIssueBody(body = '') {
