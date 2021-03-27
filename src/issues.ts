@@ -205,7 +205,7 @@ export namespace Issues {
   }
 
   const issueLink = (issue: IssueList[0]) =>
-    `#${issue.number} [${issue.title.replace(/\n/g, ' ')}](${issue.html_url})`
+    `[${issue.title.replace(/\n/g, ' ')}](${issue.html_url})`
 
   const userLink = (issue: IssueList[0]) =>
     `[${issue.user!.login}](${issue.user!.html_url})`

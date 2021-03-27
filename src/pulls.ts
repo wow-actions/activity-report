@@ -17,7 +17,7 @@ export namespace PullRequests {
   type PullRequestList = Await<ReturnType<typeof list>>
 
   const prLink = (pr: PullRequestList[0]) =>
-    `#${pr.number} [${pr.title.replace(/\n/g, ' ')}](${pr.html_url})`
+    `[${pr.title.replace(/\n/g, ' ')}](${pr.html_url})`
 
   const userLink = (pr: PullRequestList[0]) =>
     `[${pr.user!.login}](${pr.user!.html_url})`
@@ -39,7 +39,7 @@ export namespace PullRequests {
         (pr.state === 'open' &&
           pr.merged_at == null &&
           moment(pr.updated_at).isBetween(fromDate, toDate)) ||
-        (moment(pr.merged_at).isBetween(fromDate, toDate) &&
+        (moment(pr.closed_at).isBetween(fromDate, toDate) &&
           pr.state === 'closed'),
     )
 
