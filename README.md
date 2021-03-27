@@ -1,4 +1,4 @@
-<h2 align="center">Activity Report</h2>
+<h1 align="center">Activity Report</h1>
 
 <p align="center">Generates a periodic automated summary of activities and happening on your Github repository.</p>
 
