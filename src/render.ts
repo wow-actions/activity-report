@@ -83,7 +83,7 @@ export namespace Renderer {
     body += '\n'
     body += renderFooter(timespan, config)
     body +=
-      '> Your [**Weekly Digest**](https://github.com/apps/weekly-digest) bot. :calendar:\n'
+      '> Your [**Activity Report**](https://github.com/marketplace/actions/activity-report) bot. :calendar:\n'
     return body
   }
 
@@ -92,6 +92,8 @@ export namespace Renderer {
   }
 
   function renderFooter(timespan: Timespan, config: Config) {
-    return Util.render(config.templateFooter, timespan)
+    return Util.render(config.templateFooter, timespan, {
+      labels: config.addLabels,
+    })
   }
 }

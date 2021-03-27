@@ -1,5 +1,5 @@
-name: WIP Action
-description: Mark a pull request commits with pending state if it finds specified terms in the pull request title or label.
+name: Activity Report
+description: Generates a periodic automated summary of activities and happening on your Github repository.
 author: bubkoo <bubkoo.wy@gmail.com>
 
 inputs:
@@ -48,7 +48,7 @@ inputs:
   add_labels:
     required: false
     description: Comma separated labels to be add to the issue create by this action.
-    default: 'weekly-digest'
+    default: 'weekly-report'
 
   template_title:
     description: Template to render title.
@@ -183,5 +183,5 @@ runs:
   main: dist/index.js
 
 branding:
-  icon: alert-triangle
-  color: yellow
+  icon: icon
+  color: greed

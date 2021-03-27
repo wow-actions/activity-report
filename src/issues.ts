@@ -42,12 +42,6 @@ export namespace Issues {
     return res
   }
 
-  const issueLink = (issue: IssueList[0]) =>
-    `#${issue.number} [${issue.title.replace(/\n/g, ' ')}](${issue.html_url})`
-
-  const userLink = (issue: IssueList[0]) =>
-    `[${issue.user!.login}](${issue.user!.html_url})`
-
   export function render(
     issueList: IssueList = [],
     reactions: { [issue: number]: Reactions.ReactionsList },
@@ -65,7 +59,7 @@ export namespace Issues {
           timespan.fromDateString,
           timespan.toDateString,
         ) &&
-        issue.user!.login !== 'weekly-digest[bot]',
+        checkIssueBody(issue.body),
     )
 
     result.push(renderSummary(timespan, config, issues))
@@ -207,7 +201,28 @@ export namespace Issues {
       }
     }
 
+    result.push(renderHiddenArea(timespan))
+
     return result.join('\n')
+  }
+
+  const issueLink = (issue: IssueList[0]) =>
+    `#${issue.number} [${issue.title.replace(/\n/g, ' ')}](${issue.html_url})`
+
+  const userLink = (issue: IssueList[0]) =>
+    `[${issue.user!.login}](${issue.user!.html_url})`
+
+  const anchor = '<!-- activity-report-anchor -->'
+
+  function renderHiddenArea(timespan: Timespan) {
+    return `
+    <!-- ${anchor} -->
+    <!-- ${timespan.fromDateString} - ${timespan.toDateString}  -->
+    `
+  }
+
+  function checkIssueBody(body = '') {
+    return body.indexOf(anchor) !== -1
   }
 
   type IssueList = Await<ReturnType<typeof list>>

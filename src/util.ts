@@ -36,21 +36,6 @@ export namespace Util {
     }
   }
 
-  export function getDate(subtract?: number) {
-    const current = moment.utc().set({
-      hour: 0,
-      minute: 0,
-      second: 0,
-      millisecond: 0,
-    })
-
-    if (subtract) {
-      current.subtract(subtract, 'days')
-    }
-
-    return current.format()
-  }
-
   export function formatDateInTitle(date: string) {
     const d = moment(date).toObject()
     const monthNames = [
@@ -69,9 +54,6 @@ export namespace Util {
     ]
     return `${d.date} ${monthNames[d.months]}, ${d.years}`
   }
-
-  export const getDayBeforeDate = (date: moment.MomentInput) =>
-    moment(date).subtract(1, 'days').format()
 
   const numberInput = (name: string, defaultValue: number) => {
     const raw = core.getInput(name)
