@@ -48,10 +48,6 @@ export namespace Issues {
     timespan: Timespan,
     config: Config,
   ) {
-    const result: string[] = []
-
-    result.push(renderTitle(timespan, config))
-
     const issues = issueList.filter(
       (issue) =>
         issue.pull_request == null &&
@@ -62,6 +58,8 @@ export namespace Issues {
         checkIssueBody(issue.body),
     )
 
+    const result: string[] = []
+    result.push(renderTitle(timespan, config))
     result.push(renderSummary(timespan, config, issues))
 
     if (issues.length > 0) {
@@ -219,7 +217,7 @@ export namespace Issues {
   }
 
   function checkIssueBody(body = '') {
-    return body.indexOf(anchor) !== -1
+    return body.indexOf(anchor) === -1
   }
 
   type IssueList = Await<ReturnType<typeof list>>

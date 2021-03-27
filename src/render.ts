@@ -1,3 +1,4 @@
+import * as core from '@actions/core'
 import { Util } from './util'
 import { Config, Timespan } from './types'
 import { Issues } from './issues'
@@ -37,6 +38,7 @@ export namespace Renderer {
 
     if (config.publishPulls) {
       const pullRequests = await PullRequests.list()
+      core.debug(`pullRequests: ${JSON.stringify(pullRequests)}`)
       pullRequestsString = PullRequests.render(pullRequests, timespan, config)
     }
 
