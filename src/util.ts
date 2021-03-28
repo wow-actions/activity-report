@@ -1,6 +1,7 @@
 import moment from 'moment'
 import cronParse from 'cron-parser'
 import compile from 'lodash.template'
+import 'moment-precise-range-plugin'
 import * as core from '@actions/core'
 import { context } from '@actions/github'
 import { Templates } from './templates'
@@ -15,24 +16,53 @@ export namespace Util {
       millisecond: 0,
     })
 
+    let period: string | undefined = 'Activity'
     let fromDateString: string
     const toDateString = current.add(1, 'days').format()
 
     const cron = context.payload.schedule as string
     if (cron) {
       const interval = cronParse.parseExpression(cron)
-      const sub = interval.next().getTime() - new Date().getTime()
-
+      const prev = interval.prev().getTime()
+      const sub = new Date().getTime() - prev
       fromDateString = current.subtract(sub, 'milliseconds').format()
+
+      const range = moment().preciseDiff(moment(prev), true)
+      if (range.years === 1 && range.months === 0) {
+        period = 'Yearly'
+      } else if (range.years === 0 && range.months === 1) {
+        period = 'Monthly'
+      } else if (range.years === 0 && range.months === 3) {
+        period = 'Quarterly'
+      } else if (range.years === 0 && range.months === 6) {
+        period = 'Half-Yearly'
+      } else if (range.years === 0 && range.months === 0 && range.days === 7) {
+        period = 'Weekly'
+      } else if (range.years === 0 && range.months === 0 && range.days === 1) {
+        period = 'Daily'
+      }
     } else {
+      period = 'Weekly'
       fromDateString = current.subtract(7, 'days').format()
     }
 
+    const unitMap: { [period: string]: string } = {
+      Yearly: 'year',
+      'Half-Yearly': 'half-year',
+      Monthly: 'month',
+      Quarterly: 'quarter',
+      Weekly: 'weak',
+      Daily: 'day',
+      Activity: 'period',
+    }
+
     return {
-      fromDateString,
-      toDateString,
+      fromDate: fromDateString,
+      toDate: toDateString,
       fromDateObject: moment(fromDateString).toObject(),
       toDateObject: moment(toDateString).toObject(),
+      name: period,
+      unit: unitMap[period],
     }
   }
 
@@ -110,6 +140,9 @@ export namespace Util {
     // MomentHandler.registerHelpers(Handlebars)
   }
 
+  export const ucfirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+  export const lcfirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1)
+
   export function render(
     template: string,
     timespan?: Timespan,
@@ -123,8 +156,8 @@ export namespace Util {
 
     const content = compiled({
       ...context.repo,
-      ...timespan,
       ...data,
+      timespan,
       context,
     }).trim()
     return cleanBreak ? content.replace(/\n/g, ' ') : content

@@ -21,10 +21,7 @@ export namespace Releases {
     config: Config,
   ) {
     const releases = releaseList.filter((item) =>
-      moment(item.published_at).isBetween(
-        timespan.fromDateString,
-        timespan.toDateString,
-      ),
+      moment(item.published_at).isBetween(timespan.fromDate, timespan.toDate),
     )
 
     const result: string[] = []

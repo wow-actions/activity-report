@@ -28,8 +28,8 @@ export namespace Commits {
     timespan: Timespan,
     config: Config,
   ) {
-    const fromDate = timespan.fromDateString
-    const toDate = timespan.toDateString
+    const { fromDate } = timespan
+    const { toDate } = timespan
     const commits = commitList.filter((item) =>
       moment(item.commit.committer!.date).isBetween(fromDate, toDate),
     )
@@ -51,8 +51,8 @@ export namespace Commits {
     timespan: Timespan,
     config: Config,
   ) {
-    const fromDate = timespan.fromDateString
-    const toDate = timespan.toDateString
+    const { fromDate } = timespan
+    const { toDate } = timespan
     const contributors = commits.filter((item) =>
       moment(item.commit.committer!.date).isBetween(fromDate, toDate),
     )

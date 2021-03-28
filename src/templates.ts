@@ -1,13 +1,13 @@
 export namespace Templates {
-  export const title = 'Weekly Report (<%= fromDate %> - <%= toDate %>)'
-  export const header = `Here's the **Weekly Report** for [*<%= owner %>/ <%= repo %>*](https://github.com/<%= owner %>/<%= repo %>):\n`
+  export const title = `<%= timespan.name %> Report (<%= fromDate %> - <%= toDate %>)`
+  export const header = `Here's the **<%= timespan.name %> Report** for [*<%= owner %>/ <%= repo %>*](https://github.com/<%= owner %>/<%= repo %>):\n`
   export const footer =
     '\n - - - \n' +
     '\n' +
-    `That's all for last week, please <kbd>:eyes: **Watch**</kbd> and <kbd>:star: **Star**</kbd> the repository [*<%= owner %>/<%= repo %>*](https://github.com/<%= owner %>/<%= repo %>) to receive next weekly updates. :smiley:\n\n` +
+    `That's all for last <%= timespan.unit %>, please <kbd>:eyes: **Watch**</kbd> and <kbd>:star: **Star**</kbd> the repository [*<%= owner %>/<%= repo %>*](https://github.com/<%= owner %>/<%= repo %>) to receive next reports. :smiley:\n\n` +
     `
     <% if(labels.length) { %>
-*You can also [view all Weekly Reports by clicking here](https://github.com/<%= owner %>/<%= repo %>/issues?q=is:open+is:issue+label:<%= labels[0] %>).* \n\n
+*You can also [view all <%= timespan.name %> Reports by clicking here](https://github.com/<%= owner %>/<%= repo %>/issues?q=is:open+is:issue+label:<%= labels[0] %>).* \n\n
     <% } %>
   `
 
@@ -17,11 +17,11 @@ export namespace Templates {
 
   export const issuesSummary = `
   <% if (issues.length === 0) { %>
-    Last week, no issues were created.
+    Last <%= timespan.unit %>, no issues were created.
   <% } else if (issues.length === 1) { %>
-    Last week 1 issue was created.
+    Last <%= timespan.unit %> 1 issue was created.
   <% } else { %>
-    Last week <%= issues.length %> issues were created.
+    Last <%= timespan.unit %> <%= issues.length %> issues were created.
   <% }  %>
 `
 
@@ -107,19 +107,19 @@ export namespace Templates {
   export const pullRequestsTitle = '# PULL REQUESTS'
   export const pullRequestsSummary = `
     <% if (pullRequests.length === 0) { %>
-      Last week, no pull requests were created, updated or merged.
+      Last <%= timespan.unit %>, no pull requests were created, updated or merged.
     <% } else if (pullRequests.length === 1) { %>
-      Last week 1 pull request was created, updated or merged.
+      Last <%= timespan.unit %> 1 pull request was created, updated or merged.
     <% } else { %>
-      Last week <%= pullRequests.length %> pull requests were created, updated or merged.
+      Last <%= timespan.unit %> <%= pullRequests.length %> pull requests were created, updated or merged.
     <% }  %>
 `
   export const openPullRequestsTitle = `## OPEN PULL REQUEST`
   export const openPullRequestsSummary = `
     <% if (openPullRequests.length === 1) { %>
-      Last week, 1 pull request was opened.
+      Last <%= timespan.unit %>, 1 pull request was opened.
     <% } else { %>
-      Last week, <%= openPullRequests.length %> pull requests were opened.
+      Last <%= timespan.unit %>, <%= openPullRequests.length %> pull requests were opened.
     <% }  %>
   `
   export const openPullRequestsItem = `:green_heart: #<%= pullRequest.number %> <%= pullRequestLink %> by <%= userLink%>`
@@ -127,9 +127,9 @@ export namespace Templates {
   export const updatedPullRequestsTitle = `## UPDATED PULL REQUEST`
   export const updatedPullRequestsSummary = `
     <% if (updatedPullRequests.length === 1) { %>
-      Last week, 1 pull request was updated.
+      Last <%= timespan.unit %>, 1 pull request was updated.
     <% } else { %>
-      Last week, <%= updatedPullRequests.length %> pull requests were updated.
+      Last <%= timespan.unit %>, <%= updatedPullRequests.length %> pull requests were updated.
     <% }  %>
   `
   export const updatedPullRequestsItem = `:yellow_heart: #<%= pullRequest.number %> <%= pullRequestLink %> by <%= userLink%>`
@@ -137,9 +137,9 @@ export namespace Templates {
   export const mergedPullRequestsTitle = `## MERGED PULL REQUEST`
   export const mergedPullRequestsSummary = `
     <% if (mergedPullRequests.length === 1) { %>
-      Last week, 1 pull request was merged.
+      Last <%= timespan.unit %>, 1 pull request was merged.
     <% } else { %>
-      Last week, <%= mergedPullRequests.length %> pull requests were merged.
+      Last <%= timespan.unit %>, <%= mergedPullRequests.length %> pull requests were merged.
     <% }  %>
   `
   export const mergedPullRequestsItem = `:purple_heart: #<%= pullRequest.number %> <%= pullRequestLink %> by <%= userLink%>`
@@ -149,11 +149,11 @@ export namespace Templates {
   export const commitsTitle = `# COMMITS`
   export const commitsSummary = `
     <% if (commits.length === 0) { %>
-      Last week there were no commits.
+      Last <%= timespan.unit %> there were no commits.
     <% } else if (commits.length === 1) { %>
-      Last week there was 1 commit.
+      Last <%= timespan.unit %> there was 1 commit.
     <% } else { %>
-      Last week there were <%= commits.length %> commits.
+      Last <%= timespan.unit %> there were <%= commits.length %> commits.
     <% }  %>
   `
   export const commitsItem = `:hammer_and_wrench: <%= commitLink %> by <%= userLink%>`
@@ -163,11 +163,11 @@ export namespace Templates {
   export const contributorsTitle = `# CONTRIBUTORS`
   export const contributorsSummary = `
     <% if (contributors.length === 0) { %>
-      Last week there were no contributors.
+      Last <%= timespan.unit %> there were no contributors.
     <% } else if (contributors.length === 1) { %>
-      Last week there was 1 contributor.
+      Last <%= timespan.unit %> there was 1 contributor.
     <% } else { %>
-      Last week there were <%= contributors.length %> contributors.
+      Last <%= timespan.unit %> there were <%= contributors.length %> contributors.
     <% }  %>
   `
   export const contributorsItem = `:bust_in_silhouette: <%= userLink%>`
@@ -177,7 +177,7 @@ export namespace Templates {
   export const stargazersTitle = `# STARGAZERS`
   export const stargazersSummary = `
     <% if (stargazers.length === 0) { %>
-      Last week there were no stargazers.
+      Last <%= timespan.unit %> there were no stargazers.
     <% } else if (stargazers.length === 1) { %>
       You are the star! :star2:
     <% } else { %>
@@ -191,11 +191,11 @@ export namespace Templates {
   export const releasesTitle = `# RELEASES`
   export const releasesSummary = `
     <% if (releases.length === 0) { %>
-      Last week there were no releases.
+      Last <%= timespan.unit %> there were no releases.
     <% } else if (releases.length === 1) { %>
-      Last week there was 1 release.
+      Last <%= timespan.unit %> there was 1 release.
     <% } else { %>
-      Last week there were <%= releases.length %> releases.
+      Last <%= timespan.unit %> there were <%= releases.length %> releases.
     <% }  %>
   `
   export const releasesItem = `:rocket: [<%= releaseName %>](<%= release.html_url %>)`

@@ -27,8 +27,8 @@ export namespace PullRequests {
     timespan: Timespan,
     config: Config,
   ) {
-    const toDate = timespan.toDateString
-    const fromDate = timespan.fromDateString
+    const { toDate } = timespan
+    const { fromDate } = timespan
 
     const pullRequests = pullRequestList.filter(
       (pr) =>

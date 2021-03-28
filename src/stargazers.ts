@@ -26,10 +26,7 @@ export namespace Stargazers {
     const stargazers = stargazerList.filter(
       (item) =>
         item != null &&
-        moment(item.starred_at).isBetween(
-          timespan.fromDateString,
-          timespan.toDateString,
-        ),
+        moment(item.starred_at).isBetween(timespan.fromDate, timespan.toDate),
     )
 
     const result: string[] = []

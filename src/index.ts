@@ -7,9 +7,7 @@ async function run() {
   const config = Util.getInputs()
   const timespan = Util.getTimespan()
 
-  core.info(
-    `Report from ${timespan.fromDateString} to ${timespan.toDateString}`,
-  )
+  core.info(`Report from ${timespan.fromDate} to ${timespan.toDate}`)
 
   const title = Renderer.renderTitle(timespan, config)
   const body = await Renderer.renderBody(timespan, config)

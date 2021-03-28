@@ -52,8 +52,8 @@ export namespace Issues {
       (issue) =>
         issue.pull_request == null &&
         moment(issue.created_at).isBetween(
-          timespan.fromDateString,
-          timespan.toDateString,
+          timespan.fromDate,
+          timespan.toDate,
         ) &&
         checkIssueBody(issue.body),
     )
@@ -213,7 +213,7 @@ export namespace Issues {
   const anchor = '<!-- activity-report-anchor -->'
 
   function renderHiddenArea(timespan: Timespan) {
-    return `${anchor}\n<!-- ${timespan.fromDateString} - ${timespan.toDateString}  -->`
+    return `${anchor}\n<!-- ${timespan.fromDate} - ${timespan.toDate}  -->`
   }
 
   function checkIssueBody(body = '') {

@@ -9,3 +9,8 @@
 <a href="https://github.com/bubkoo/activity-report/actions/workflows/test.yml"><img alt="build" src="https://img.shields.io/github/workflow/status/bubkoo/activity-report/Test/master?logo=github&style=flat-square"></a>
 <a href="https://lgtm.com/projects/g/bubkoo/activity-report/context:javascript"><img alt="Language grade: JavaScript" src="https://img.shields.io/lgtm/grade/javascript/g/bubkoo/activity-report.svg?logo=lgtm&style=flat-square"></a>
 </p>
+
+- Daily - `0 8 * * *` At 08:00.
+- Weekly - `0 8 * * 0` At 08:00 on Sunday.
+- Monthly - `0 8 1 * *` At 08:00 on day-of-month 1.
+- Yearly - `0 8 1 1 *` At 08:00 on day-of-month 1 in January.

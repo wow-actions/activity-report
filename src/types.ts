@@ -6,8 +6,10 @@ export type Await<T> = T extends PromiseLike<infer U> ? U : T
 export type Config = ReturnType<typeof Util.getInputs>
 
 export interface Timespan {
-  fromDateString: string
-  toDateString: string
+  name: string
+  unit: string
+  fromDate: string
+  toDate: string
   fromDateObject: MomentObjectOutput
   toDateObject: MomentObjectOutput
 }

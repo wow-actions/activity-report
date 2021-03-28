@@ -11,8 +11,8 @@ import { PullRequests } from './pulls'
 export namespace Renderer {
   export function renderTitle(timespan: Timespan, config: Config) {
     return Util.render(config.templateTitle, timespan, {
-      fromDate: Util.formatDateInTitle(timespan.fromDateString),
-      toDate: Util.formatDateInTitle(timespan.toDateString),
+      fromDate: Util.formatDateInTitle(timespan.fromDate),
+      toDate: Util.formatDateInTitle(timespan.toDate),
     })
   }
 
@@ -27,7 +27,7 @@ export namespace Renderer {
     let releasesString: string | undefined
 
     if (config.publishIssues) {
-      const issues = await Issues.list(timespan.fromDateString)
+      const issues = await Issues.list(timespan.fromDate)
       const reactions =
         config.publishTopLikedIssues > 0
           ? await Reactions.map(issues.map((issue) => issue.number))
@@ -43,7 +43,7 @@ export namespace Renderer {
     }
 
     if (config.publishCommits || config.publishCommits) {
-      const commits = await Commits.list(timespan.fromDateString)
+      const commits = await Commits.list(timespan.fromDate)
       if (config.publishCommits) {
         commitsString = Commits.render(commits, timespan, config)
       }
