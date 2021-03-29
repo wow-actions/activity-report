@@ -183,6 +183,7 @@ export namespace Util {
         .getInput('add_labels')
         .split(/\s?,\s?/)
         .map((label) => label.trim()),
+      autoClose: core.getInput('auto_close') !== 'false',
 
       templateTitle: input('template_title', Templates.title),
       templateHeader: input('template_header', Templates.header),

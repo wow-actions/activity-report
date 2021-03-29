@@ -26,8 +26,13 @@ export namespace Renderer {
     let commitsString: string | undefined
     let releasesString: string | undefined
 
+    const issues = await Issues.list(timespan.fromDate)
+
+    if (config.autoClose) {
+      await Issues.closeOldReports(issues)
+    }
+
     if (config.publishIssues) {
-      const issues = await Issues.list(timespan.fromDate)
       const reactions =
         config.publishTopLikedIssues > 0
           ? await Reactions.map(issues.map((issue) => issue.number))

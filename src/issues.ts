@@ -42,6 +42,22 @@ export namespace Issues {
     return res
   }
 
+  export async function closeOldReports(issueList: IssueList = []) {
+    const issues = issueList.filter(
+      (issue) => issue.pull_request == null && checkIssueBody(issue.body),
+    )
+
+    const defers = issues.map((issue) =>
+      octokit.issues.update({
+        ...context.repo,
+        issue_number: issue.number,
+        state: 'closed',
+      }),
+    )
+
+    return Promise.all(defers)
+  }
+
   export function render(
     issueList: IssueList = [],
     reactions: { [issue: number]: Reactions.ReactionsList },

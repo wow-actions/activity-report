@@ -7,11 +7,6 @@ inputs:
     required: true
     description: Your GitHub token for authentication.
 
-  days:
-    required: false
-    description: How many days before now to collect metadata.
-    default: 7
-
   publish_issues:
     required: false
     description: Should publish issues or not.
@@ -48,7 +43,11 @@ inputs:
   add_labels:
     required: false
     description: Comma separated labels to be add to the issue create by this action.
-    default: 'weekly-report'
+
+  auto_close:
+    required: false
+    description: Auto close old reports.
+    default: true
 
   template_title:
     description: Template to render title.
