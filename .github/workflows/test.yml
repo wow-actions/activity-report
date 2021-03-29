@@ -1,10 +1,8 @@
 name: Test
 
 on:
-  push:
-  pull_request:
-  # schedule:
-  # - cron: '5 * * * *'
+  schedule:
+    - cron: '45 17 * * 5'
 
 jobs:
   run:
