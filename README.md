@@ -71,7 +71,7 @@ We will auto detect your report type (`Daily`, `Weekly`, `Monthly`, `Quarterly`,
 
 ### Custom template the render the issue
 
-Using these inputs to custom your report. The default templates can found [here](/blob/master/src/templates.ts). Follow the [`lodash.template`](https://www.npmjs.com/package/lodash.template) [documentation](https://lodash.com/docs#template).
+Using these inputs of template to custom your report. The default templates can be found [here](/src/templates.ts). Follow the [`lodash.template`](https://www.npmjs.com/package/lodash.template) [documentation](https://lodash.com/docs#template).
 
 - template_title
 - template_header
