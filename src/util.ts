@@ -9,25 +9,20 @@ import { Timespan } from './types'
 
 export namespace Util {
   export function getTimespan(): Timespan {
-    const current = moment.utc().set({
-      hour: 0,
-      minute: 0,
-      second: 0,
-      millisecond: 0,
-    })
-
     let period: string | undefined = 'Activity'
+    let toDateString: string
     let fromDateString: string
-    const toDateString = current.add(1, 'days').format()
 
     const cron = context.payload.schedule as string
     if (cron) {
       const interval = cronParse.parseExpression(cron)
-      const prev = interval.prev().getTime()
-      const sub = new Date().getTime() - prev
-      fromDateString = current.subtract(sub, 'milliseconds').format()
+      const prev1 = interval.prev().getTime()
+      const prev2 = interval.prev().getTime()
 
-      const range = moment().preciseDiff(moment(prev), true)
+      toDateString = moment(prev1).format()
+      fromDateString = moment(prev2).format()
+
+      const range = moment(prev1).preciseDiff(moment(prev2), true)
       if (range.years === 1 && range.months === 0) {
         period = 'Yearly'
       } else if (range.years === 0 && range.months === 1) {
@@ -43,7 +38,8 @@ export namespace Util {
       }
     } else {
       period = 'Weekly'
-      fromDateString = current.subtract(7, 'days').format()
+      toDateString = moment().format()
+      fromDateString = moment().subtract(7, 'days').format()
     }
 
     const unitMap: { [period: string]: string } = {
@@ -57,10 +53,10 @@ export namespace Util {
     }
 
     return {
-      fromDate: fromDateString,
       toDate: toDateString,
-      fromDateObject: moment(fromDateString).toObject(),
+      fromDate: fromDateString,
       toDateObject: moment(toDateString).toObject(),
+      fromDateObject: moment(fromDateString).toObject(),
       name: period,
       unit: unitMap[period],
     }
