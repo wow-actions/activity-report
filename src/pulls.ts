@@ -20,7 +20,7 @@ export namespace PullRequests {
     `[${pr.title.replace(/\n/g, ' ')}](${pr.html_url})`
 
   const userLink = (pr: PullRequestList[0]) =>
-    `[${pr.user!.login}](${pr.user!.html_url})`
+    pr.user ? `[${pr.user.login}](${pr.user.html_url})` : ''
 
   export function render(
     pullRequestList: PullRequestList = [],

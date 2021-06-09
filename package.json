@@ -1,7 +1,7 @@
 {
   "name": "activity-report",
   "description": "A Github Action to generate a periodic automated summary of activities and happening on your Github repository.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/index.js",
   "files": [
     "dist",

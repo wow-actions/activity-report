@@ -83,7 +83,9 @@ export namespace Stargazers {
       {
         stargazer,
         stargazers,
-        userLink: `[${stargazer!.login}](${stargazer!.html_url})`,
+        userLink: stargazer
+          ? `[${stargazer.login}](${stargazer.html_url})`
+          : '',
       },
       true,
     )

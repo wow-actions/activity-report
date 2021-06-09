@@ -21,7 +21,7 @@ export namespace Commits {
     `[${commit.commit.message.replace(/\n/g, ' ')}](${commit.html_url})`
 
   const userLink = (commit: CommitList[0]) =>
-    `[${commit.author!.login}](${commit.author!.html_url})`
+    commit.author ? `[${commit.author.login}](${commit.author.html_url})` : ''
 
   export function render(
     commitList: CommitList = [],

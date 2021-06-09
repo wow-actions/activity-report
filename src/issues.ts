@@ -224,7 +224,7 @@ export namespace Issues {
     `[${issue.title.replace(/\n/g, ' ')}](${issue.html_url})`
 
   const userLink = (issue: IssueList[0]) =>
-    `[${issue.user!.login}](${issue.user!.html_url})`
+    issue.user ? `[${issue.user.login}](${issue.user.html_url})` : ''
 
   const anchor = '<!-- activity-report-anchor -->'
 
