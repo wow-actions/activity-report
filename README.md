@@ -67,7 +67,6 @@ We will auto detect your report type (`Daily`, `Weekly`, `Monthly`, `Quarterly`,
 - `publish_commits`: Should publish commits or not. Default `true`.
 - `publish_releases`: Should publish releases or not. Default `true`.
 - `add_labels`: Comma separated labels to be add to the issue create by this action. By default, the action will add a label in the form `"{{ type }}-report"`, such as `weekly-report`, to the issue.
-- `auto_close`: Should auto close old reports or not. Default `true`.
 
 ### Custom template the render the issue
 

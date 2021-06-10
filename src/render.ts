@@ -26,24 +26,19 @@ export namespace Renderer {
     let commitsString: string | undefined
     let releasesString: string | undefined
 
-    const issues = await Issues.list(timespan.fromDate)
-
-    if (config.autoClose) {
-      await Issues.closeOldReports(issues)
-    }
-
     if (config.publishIssues) {
+      const issues = await Issues.list(timespan.fromDate)
       const reactions =
         config.publishTopLikedIssues > 0
           ? await Reactions.map(issues.map((issue) => issue.number))
           : []
-      // core.debug(`issues: ${JSON.stringify(issues)}`)
+      core.debug(`issues: ${JSON.stringify(issues.map((i) => i.title))}`)
       issuesString = Issues.render(issues, reactions, timespan, config)
     }
 
     if (config.publishPulls) {
       const pullRequests = await PullRequests.list()
-      core.debug(`pullRequests: ${JSON.stringify(pullRequests)}`)
+      core.debug(`prs: ${JSON.stringify(pullRequests.map((i) => i.title))}`)
       pullRequestsString = PullRequests.render(pullRequests, timespan, config)
     }
 

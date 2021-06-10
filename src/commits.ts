@@ -5,11 +5,11 @@ import { octokit } from './octokit'
 import { Await, Config, Timespan } from './types'
 
 export namespace Commits {
-  export async function list(tailDate: string) {
+  export async function list(fromDate: string) {
     const commits = await octokit.paginate(octokit.repos.listCommits, {
       ...context.repo,
       state: 'all',
-      since: tailDate,
+      since: fromDate,
       per_page: 100,
     })
     return commits
@@ -28,8 +28,7 @@ export namespace Commits {
     timespan: Timespan,
     config: Config,
   ) {
-    const { fromDate } = timespan
-    const { toDate } = timespan
+    const { fromDate, toDate } = timespan
     const commits = commitList.filter((item) =>
       moment(item.commit.committer!.date).isBetween(fromDate, toDate),
     )

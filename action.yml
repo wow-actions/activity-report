@@ -44,11 +44,6 @@ inputs:
     required: false
     description: Comma separated labels to be add to the issue create by this action.
 
-  auto_close:
-    required: false
-    description: Auto close old reports.
-    default: true
-
   template_title:
     description: Template to render title.
     required: false
