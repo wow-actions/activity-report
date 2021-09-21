@@ -6,7 +6,7 @@ import { Await, Config, Timespan } from './types'
 
 export namespace Releases {
   export async function list() {
-    const releases = await octokit.paginate(octokit.repos.listReleases, {
+    const releases = await octokit.paginate(octokit.rest.repos.listReleases, {
       ...context.repo,
       per_page: 100,
     })

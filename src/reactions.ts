@@ -4,11 +4,14 @@ import { Await } from './types'
 
 export namespace Reactions {
   export async function list(issue: number) {
-    const reactions = await octokit.paginate(octokit.reactions.listForIssue, {
-      ...context.repo,
-      issue_number: issue,
-      per_page: 100,
-    })
+    const reactions = await octokit.paginate(
+      octokit.rest.reactions.listForIssue,
+      {
+        ...context.repo,
+        issue_number: issue,
+        per_page: 100,
+      },
+    )
     return reactions
   }
 

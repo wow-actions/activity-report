@@ -1,6 +1,6 @@
 {
   "name": "activity-report",
-  "description": "A Github Action to generate a periodic automated summary of activities and happening on your Github repository.",
+  "description": "Generate a periodic automated summary of activities and happening on your Github repository",
   "version": "1.1.0",
   "main": "dist/index.js",
   "files": [
@@ -12,13 +12,7 @@
     "lint": "eslint 'src/**/*.{js,ts}?(x)' --fix",
     "build": "ncc build src/index.ts --minify --v8-cache",
     "prebuild": "run-s lint clean",
-    "precommit": "lint-staged"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged && yarn precommit"
-    }
+    "prepare": "is-ci || husky install .husky"
   },
   "lint-staged": {
     "**/*.{js,jsx,tsx,ts,less,md,json}": [
@@ -33,39 +27,44 @@
       "@commitlint/config-conventional"
     ]
   },
-  "repository": "https://github.com/bubkoo/activity-report",
-  "author": "bubkoo <bubkoo.wy@gmail.com>",
+  "repository": "https://github.com/wow-actions/activity-report",
   "license": "MIT",
+  "author": {
+    "name": "bubkoo",
+    "email": "bubkoo.wy@gmail.com"
+  },
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0",
-    "cron-parser": "^3.3.0",
+    "@actions/core": "^1.5.0",
+    "@actions/github": "^5.0.0",
+    "cron-parser": "^4.0.0",
     "lodash.template": "^4.5.0",
     "moment": "^2.29.1",
     "moment-precise-range-plugin": "^1.3.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
     "@types/lodash.template": "^4.5.0",
     "@types/moment-precise-range-plugin": "^0.2.0",
-    "@types/node": "^14.0.27",
-    "@typescript-eslint/eslint-plugin": "^4.18.0",
-    "@typescript-eslint/parser": "^4.18.0",
-    "@vercel/ncc": "^0.24.1",
-    "eslint": "^7.22.0",
+    "@types/node": "^16.9.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
+    "@vercel/ncc": "^0.31.1",
+    "devmoji": "^2.3.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-config-prettier": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-promise": "^4.3.1",
-    "husky": "^4.3.0",
-    "lint-staged": "^10.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "husky": "^7.0.2",
+    "is-ci": "^3.0.0",
+    "lint-staged": "^11.1.2",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.1.2",
-    "pretty-quick": "^3.0.2",
+    "prettier": "^2.4.1",
+    "pretty-quick": "^3.1.1",
     "rimraf": "^3.0.2",
-    "typescript": "4.0.3"
+    "typescript": "^4.4.3"
   }
 }

@@ -1,13 +1,13 @@
 <h1 align="center">Activity Report</h1>
 
-<p align="center">Generates a periodic automated summary of activities and happening on your Github repository.</p>
+<p align="center">Generates a periodic automated summary of activities and happening on your Github repository</p>
 
 <p align="center">
 <a href="/LICENSE"><img src="https://img.shields.io/badge/license-MIT_License-green.svg?style=flat-square" alt="MIT License"></a>
 <a href="https://www.typescriptlang.org"><img alt="Language" src="https://img.shields.io/badge/language-TypeScript-blue.svg?style=flat-square"></a>
-<a href="https://github.com/bubkoo/activity-report/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square"></a>
-<a href="https://github.com/bubkoo/activity-report/actions/workflows/test.yml"><img alt="build" src="https://img.shields.io/github/workflow/status/bubkoo/activity-report/Test/master?logo=github&style=flat-square"></a>
-<a href="https://lgtm.com/projects/g/bubkoo/activity-report/context:javascript"><img alt="Language grade: JavaScript" src="https://img.shields.io/lgtm/grade/javascript/g/bubkoo/activity-report.svg?logo=lgtm&style=flat-square"></a>
+<a href="https://github.com/wow-actions/activity-report/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square"></a>
+<a href="https://github.com/wow-actions/activity-report/actions/workflows/test.yml"><img alt="build" src="https://img.shields.io/github/workflow/status/wow-actions/activity-report/Test/master?logo=github&style=flat-square"></a>
+<a href="https://lgtm.com/projects/g/wow-actions/activity-report/context:javascript"><img alt="Language grade: JavaScript" src="https://img.shields.io/lgtm/grade/javascript/g/wow-actions/activity-report.svg?logo=lgtm&style=flat-square"></a>
 </p>
 
 On running the action, it curates together the following data and publishes it as an issue:
@@ -39,7 +39,7 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: bubkoo/activity-report@v1
+      - uses: wow-actions/activity-report@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -57,16 +57,22 @@ We will auto detect your report type (`Daily`, `Weekly`, `Monthly`, `Quarterly`,
 
 ## Inputs
 
-- `GITHUB_TOKEN`: Your GitHub token for authentication.
-- `publish_issues`: Should publish issues or not. Default `true`.
-- `publish_top_liked_issues`: Should publish top liked issues with most positive reactions or not, or the count of top liked issues to publish. Default `3`.
-- `publish_top_hot_issues`: Should publish top hot issues with most comments or not, or the count of top hot issues to publish. Default `3`.
-- `publish_pull_requests`: Should publish pull requests or not. Default `true`.
-- `publish_contributors`: Should publish contributors or not. Default `true`.
-- `publish_stargazers`: Should publish stargazers or not. Default `true`.
-- `publish_commits`: Should publish commits or not. Default `true`.
-- `publish_releases`: Should publish releases or not. Default `true`.
-- `add_labels`: Comma separated labels to be add to the issue create by this action. By default, the action will add a label in the form `"{{ type }}-report"`, such as `weekly-report`, to the issue.
+Various inputs are defined to let you configure the action:
+
+> Note: [Workflow command and parameter names are not case-sensitive](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#about-workflow-commands).
+
+| Name | Description | Default |
+| --- | --- | --- |
+| `GITHUB_TOKEN` | The GitHub token for authentication | N/A |
+| `publish_issues` | Should publish issues or not | `true` |
+| `publish_top_liked_issues` | Should publish top liked issues with most positive reactions or not, or the count of top liked issues to publish | `3` |
+| `publish_top_hot_issues` | Should publish top hot issues with most comments or not, or the count of top hot issues to publish | `3` |
+| `publish_pull_requests` | Should publish pull requests or not | `true` |
+| `publish_contributors` | Should publish contributors or not | `true` |
+| `publish_stargazers` | Should publish stargazers or not | `true` |
+| `publish_commits` | Should publish commits or not | `true` |
+| `publish_releases` | Should publish releases or not | `true` |
+| `add_labels` | Comma separated labels to be add to the issue create by this action <br> By default, the action will add a label in the form `"{{ type }}-report"`, such as `weekly-report`, to the issue |  |
 
 ### Custom template the render the issue
 

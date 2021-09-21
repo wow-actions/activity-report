@@ -6,7 +6,7 @@ import { Await, Config, Timespan } from './types'
 
 export namespace PullRequests {
   export async function list() {
-    const prs = await octokit.paginate(octokit.pulls.list, {
+    const prs = await octokit.paginate(octokit.rest.pulls.list, {
       ...context.repo,
       state: 'all',
       per_page: 100,

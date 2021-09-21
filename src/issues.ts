@@ -7,7 +7,7 @@ import { Await, Config, Timespan } from './types'
 
 export namespace Issues {
   export async function list(fromDate: string) {
-    const issues = await octokit.paginate(octokit.issues.listForRepo, {
+    const issues = await octokit.paginate(octokit.rest.issues.listForRepo, {
       ...context.repo,
       state: 'all',
       since: fromDate,
@@ -17,7 +17,7 @@ export namespace Issues {
   }
 
   export async function create(title: string, body: string, labels?: string[]) {
-    return octokit.issues.create({
+    return octokit.rest.issues.create({
       ...context.repo,
       title,
       body,
@@ -35,7 +35,7 @@ export namespace Issues {
     date: string
   }) {
     const { repo, owner } = context.repo
-    const res = await octokit.search.issuesAndPullRequests({
+    const res = await octokit.rest.search.issuesAndPullRequests({
       q: `repo:${owner}/${repo} type:${type} author:${author} created:>=${date}`,
       per_page: 100,
     })
@@ -109,7 +109,8 @@ export namespace Issues {
 
         issues.forEach((issue) => {
           likeMap[issue.number] = reactions[issue.number].reduce(
-            (memo, { content }) => memo + (likeTypes.includes(content) ? 1 : 0),
+            (memo: number, { content }) =>
+              memo + (likeTypes.includes(content) ? 1 : 0),
             0,
           )
         })

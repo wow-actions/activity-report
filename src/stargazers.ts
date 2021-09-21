@@ -7,7 +7,7 @@ import { Await, Config, Timespan } from './types'
 export namespace Stargazers {
   export async function list() {
     const stargazers = await octokit.paginate(
-      octokit.activity.listStargazersForRepo,
+      octokit.rest.activity.listStargazersForRepo,
       {
         ...context.repo,
         per_page: 100,
@@ -31,10 +31,12 @@ export namespace Stargazers {
 
     const result: string[] = []
     result.push(
-      renderTitle(timespan, config, stargazers),
-      renderSummary(timespan, config, stargazers),
+      renderTitle(timespan, config, stargazers as any),
+      renderSummary(timespan, config, stargazers as any),
       stargazers
-        .map((stargazer) => renderItem(timespan, config, stargazer, stargazers))
+        .map((stargazer) =>
+          renderItem(timespan, config, stargazer as any, stargazers as any),
+        )
         .join('\n'),
     )
 

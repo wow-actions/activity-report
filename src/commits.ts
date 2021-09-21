@@ -6,7 +6,7 @@ import { Await, Config, Timespan } from './types'
 
 export namespace Commits {
   export async function list(fromDate: string) {
-    const commits = await octokit.paginate(octokit.repos.listCommits, {
+    const commits = await octokit.paginate(octokit.rest.repos.listCommits, {
       ...context.repo,
       state: 'all',
       since: fromDate,
