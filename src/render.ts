@@ -42,7 +42,7 @@ export namespace Renderer {
       pullRequestsString = PullRequests.render(pullRequests, timespan, config)
     }
 
-    if (config.publishCommits || config.publishCommits) {
+    if (config.publishCommits || config.publishContributors) {
       const commits = await Commits.list(timespan.fromDate)
       if (config.publishCommits) {
         commitsString = Commits.render(commits, timespan, config)
