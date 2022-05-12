@@ -101,9 +101,9 @@ Using these inputs of template to custom your report. The default templates can 
 - template_open_pull_requests_title
 - template_open_pull_requests_summary
 - template_open_pull_requests_item
-- template_updaed_pull_requests_title
-- template_updaed_pull_requests_summary
-- template_updaed_pull_requests_item
+- template_updated_pull_requests_title
+- template_updated_pull_requests_summary
+- template_updated_pull_requests_item
 - template_merged_pull_requests_title
 - template_merged_pull_requests_summary
 - template_merged_pull_requests_item
