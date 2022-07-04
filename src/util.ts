@@ -47,7 +47,7 @@ export namespace Util {
       'Half-Yearly': 'half-year',
       Monthly: 'month',
       Quarterly: 'quarter',
-      Weekly: 'weak',
+      Weekly: 'week',
       Daily: 'day',
       Activity: 'period',
     }
