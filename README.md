@@ -3,10 +3,10 @@
 <p align="center">Generates a periodic automated summary of activities and happening on your Github repository</p>
 
 <p align="center">
+<a href="https://github.com/wow-actions/activity-report/actions/workflows/test.yml"><img alt="build" src="https://img.shields.io/github/actions/workflow/status/wow-actions/activity-report/test.yml?branch=master&logo=github&style=flat-square"></a>
 <a href="/LICENSE"><img src="https://img.shields.io/badge/license-MIT_License-green.svg?style=flat-square" alt="MIT License"></a>
 <a href="https://www.typescriptlang.org"><img alt="Language" src="https://img.shields.io/badge/language-TypeScript-blue.svg?style=flat-square"></a>
 <a href="https://github.com/wow-actions/activity-report/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square"></a>
-<a href="https://github.com/wow-actions/activity-report/actions/workflows/test.yml"><img alt="build" src="https://img.shields.io/github/workflow/status/wow-actions/activity-report/Test/master?logo=github&style=flat-square"></a>
 <a href="https://lgtm.com/projects/g/wow-actions/activity-report/context:javascript"><img alt="Language grade: JavaScript" src="https://img.shields.io/lgtm/grade/javascript/g/wow-actions/activity-report.svg?logo=lgtm&style=flat-square"></a>
 </p>
 
